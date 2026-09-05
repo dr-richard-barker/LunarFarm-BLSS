@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What a Playable Closed Loop Teaches About Closing One</title>
+<meta name="description" content="A reproducible study of a human-in-the-loop bioregenerative life support model: what stabilises a closed carbon loop, and how incentives shape biodiversity.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🌱</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Petrona:ital,wght@0,500;0,700;0,800;1,500&family=Source+Sans+3:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#e7ecf1; --paper:#f8fafc; --sunk:#dde4ec;
+  --ink:#131c26; --ink-soft:#546679; --ink-faint:#8496a8;
+  --rule:#c8d3de; --rule-soft:#dbe3ec;
+  --frost:#3f7fa8; --frost-soft:#e0edf5;
+  --chloro:#2f7a49; --warm:#a8632c;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --display:"Petrona",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0a0e14; --paper:#141b24; --sunk:#0f151d;
+    --ink:#dde5ee; --ink-soft:#93a4b7; --ink-faint:#66788c;
+    --rule:#26313d; --rule-soft:#1c242e;
+    --frost:#6fb3da; --frost-soft:#14252f; --chloro:#5fb87c; --warm:#d99358;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:0 26px 90px}
+p{margin:0 0 1em;max-width:68ch} a{color:var(--frost)}
+.mast{padding:60px 0 28px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--frost);margin:0 0 18px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,6vw,60px);line-height:1.04;
+  letter-spacing:-.02em;margin:0 0 16px;max-width:20ch}
+.standfirst{font-family:var(--display);font-style:italic;font-weight:500;
+  font-size:clamp(17px,2.2vw,21px);line-height:1.5;color:var(--ink-soft);max-width:58ch;margin:0}
+.byline{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:24px;font-family:var(--mono);
+  font-size:11.5px;color:var(--ink-faint)}
+.byline b{color:var(--ink-soft);font-weight:500}
+section{padding-top:52px}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(24px,3.2vw,32px);line-height:1.15;
+  letter-spacing:-.015em;margin:0 0 6px}
+.num{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--frost);display:block;margin-bottom:9px}
+figure{margin:22px 0 8px;background:var(--paper);border:1px solid var(--rule);border-radius:10px;
+  padding:14px;overflow-x:auto}
+figure img{width:100%;display:block;border-radius:4px}
+figcaption{font-size:13px;color:var(--ink-soft);margin-top:11px;line-height:1.55}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
+th,td{padding:7px 12px 7px 0;border-bottom:1px solid var(--rule-soft);text-align:left}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-faint);font-weight:600}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+tr.hi td{color:var(--chloro);font-weight:600}
+.note{border-left:2px solid var(--warm);background:var(--paper);padding:15px 18px;
+  border-radius:0 8px 8px 0;margin:24px 0}
+.note .h{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--warm);display:block;margin-bottom:7px}
+.note p{margin:0;font-size:14.5px} .note p+p{margin-top:.75em}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:12px;margin:24px 0}
+.card{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:16px 17px}
+.card b{display:block;font-family:var(--mono);font-size:26px;letter-spacing:-.02em;
+  color:var(--chloro);font-variant-numeric:tabular-nums}
+.card span{display:block;margin-top:7px;font-size:13.5px;color:var(--ink-soft);line-height:1.45}
+pre{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:13px 15px;
+  overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6}
+footer{margin-top:70px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);line-height:1.8}
+footer a{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">Lunar Farm · BLSS economics · September 2026</p>
+  <h1>What a Playable Closed Loop Teaches About Closing One</h1>
+  <p class="standfirst">Bioregenerative life support is usually modelled as a control problem.
+    Put a decision-maker inside the loop and different questions become answerable — including
+    which incentives make closing it a rational choice.</p>
+  <div class="byline">
+    <span><b>Model</b> <a href="https://github.com/dr-richard-barker/LunarSims">Lunar Farm</a></span>
+    <span><b>Runs</b> 274 seeded, across four experiments</span>
+    <span><b>Code</b> <a href="https://github.com/dr-richard-barker/LunarFarm-BLSS">LunarFarm-BLSS</a></span>
+  </div>
+</header>
+
+<section>
+  <span class="num">01 — Findings</span>
+  <h2>Four results</h2>
+  <div class="cards">
+    <div class="card"><b>15.6×</b><span>the factor by which an anaerobic digester lifts the
+      minimum carbon buffer — the only compartment that moves the floor rather than the mean</span></div>
+    <div class="card"><b>2.94×</b><span>broadcast revenue from a ten-crop rotation against a
+      monoculture, while closure income stays flat (r = 0.989, p = 7.4 × 10⁻⁸)</span></div>
+    <div class="card"><b>−60.6 kg</b><span>the carbon a nitrifying bioreactor <em>costs</em> the
+      system when a digester is present: they compete for the same waste</span></div>
+    <div class="card"><b>~20%</b><span>the optimum share of the farm grown in the dark. Above
+      60%, every run ends on oxygen — not on food</span></div>
+  </div>
+</section>
+
+<section>
+  <span class="num">02 — Carbon</span>
+  <h2>Only the digester lifts the floor</h2>
+  <p>A closed farm that exports food exports carbon inside it, so its buffer runs down. Below
+    roughly 14 kg the whole canopy drops to 15% of rate. The distinction that matters is between
+    raising the <em>mean</em> buffer and raising its <em>minimum</em>: arms that do the first
+    still spend part of every lunar cycle in carbon limitation.</p>
+  <figure>
+    <img src="figures/fig1_carbon_stability.png" alt="Left: horizontal bars of the lowest CO2 buffer reached per arm, with the anaerobic digester far ahead at 79 kg and every other arm clustered near 5 kg. Right: CO2 trajectories over 300 days showing a lunar-cycle sawtooth, with the no-compartment arm repeatedly bottoming out at the 14 kg limitation threshold.">
+    <figcaption>Eight seeded runs per arm over 300 days, with starvation timing and substrate
+      quality controlled out. The sawtooth on the right is the lunar cycle: a lit canopy draws the
+      buffer down through the sunlit fortnight and it recovers through the dark one, when halls
+      are shed for want of power.</figcaption>
+  </figure>
+  <table>
+    <tr><th>Arm</th><th>CO₂ floor</th><th>CO₂ mean</th><th>Harvests</th></tr>
+    <tr class="hi"><td>Anaerobic digester</td><td class="n">79.4 kg</td><td class="n">217.2 kg</td><td class="n">14</td></tr>
+    <tr><td>Mushrooms in rotation</td><td class="n">6.2 kg</td><td class="n">149.9 kg</td><td class="n">16</td></tr>
+    <tr><td>All four compartments</td><td class="n">5.9 kg</td><td class="n">157.7 kg</td><td class="n">14</td></tr>
+    <tr><td>Mealworm tier</td><td class="n">5.6 kg</td><td class="n">87.3 kg</td><td class="n">13</td></tr>
+    <tr><td>No compartment</td><td class="n">5.1 kg</td><td class="n">77.0 kg</td><td class="n">12</td></tr>
+    <tr><td>Spirulina in rotation</td><td class="n">4.9 kg</td><td class="n">69.0 kg</td><td class="n">16</td></tr>
+  </table>
+
+  <div class="note">
+    <span class="h">The comparison that was wrong first</span>
+    <p>Our first, uncontrolled run showed a plants-only farm failing 3 of 3 and a mushroom
+      rotation surviving 3 of 3 — apparent proof that a respiring compartment rescues the carbon
+      loop. It was not. A <em>photosynthetic</em> control survived too, and once starvation timing
+      and raw-regolith growth were controlled, the mushroom rotation raised the mean buffer and
+      left its floor untouched. The effect was harvest cadence, not respiration.</p>
+    <p>It is documented in the manuscript rather than quietly corrected, because it is the most
+      transferable thing here.</p>
+  </div>
+</section>
+
+<section>
+  <span class="num">03 — Incentives</span>
+  <h2>Biodiversity can be made to pay</h2>
+  <p>The farm has two income streams, shaped to price different things. A broadcast mechanic pays
+    for filmed segments whose <em>novelty</em> collapses on airing and recovers slowly; a
+    life-support contract pays on the share of crew life support the farm actually carries. The
+    first should reward variety and the second should be indifferent to it.</p>
+  <figure>
+    <img src="figures/fig2_diversity_economics.png" alt="Left: broadcast revenue rising near-linearly with rotation breadth from about 44,000 to 129,000 credits, while service-contract revenue stays flat near 30,500. Right: paired bars showing terminal credits with and without a studio across rotation breadths.">
+    <figcaption>Broadcast revenue scales with rotation breadth (r = 0.989, p = 7.4 × 10⁻⁸);
+      service income does not (r = −0.584, p = 0.076). Two incentives on one farm, without
+      interference.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <span class="num">04 — Interaction</span>
+  <h2>The better earner is the worse citizen</h2>
+  <p>Separating what each compartment adds <em>alone</em> from what it adds <em>given the other
+    three</em> exposes a substrate conflict. The nitrifying bioreactor processes more than twice
+    the waste the digester does and is paid accordingly — but every unit it oxidises is a unit the
+    digester cannot mineralise back into carbon dioxide.</p>
+  <figure>
+    <img src="figures/fig3_compartment_knockout.png" alt="Left: paired bars of each compartment's carbon contribution alone versus given the other three, with the digester strongly positive and the nitrifier strongly negative in the marginal case. Right: extra station income per compartment, dominated by the nitrifying bioreactor.">
+    <figcaption>A player optimising income alone will build the nitrifier and degrade the loop
+      they are being paid to close. This is the class of misalignment a human-in-the-loop model
+      exists to surface, and it is invisible in a single-arm analysis.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <span class="num">05 — Night</span>
+  <h2>Heterotrophs are a supplement, never a substitute</h2>
+  <p>A dark-grown crop is never shed when power is short, which argues for growing more of them.
+    It is also a heterotroph that burns oxygen and returns carbon dioxide.</p>
+  <figure>
+    <img src="figures/fig4_night_resilience.png" alt="Left: load shedding falling from about 51 percent to zero as the dark-grown fraction rises. Right: harvests collapsing from 21 to 1 over the same range, with a shaded region above 60 percent where every run fails.">
+    <figcaption>Above 40% dark-grown the trade turns, and every run at or above 60% ends between
+      day 144 and day 187 — on oxygen exhaustion, with a saturated carbon buffer and more than
+      700 days of food still in store. The optimum sits near 20%.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <span class="num">06 — Provenance</span>
+  <h2>Where the parameters come from</h2>
+  <p>Compartment ratios are taken from the Lunar Palace 1 ("Yuegong-1") 105-day multi-crew closed
+    experiment of February–May 2014. The ratios are theirs; the throughputs they are applied to
+    are scaled for play.</p>
+  <table>
+    <tr><th>Parameter</th><th>Value</th><th>Source</th></tr>
+    <tr><td><em>Tenebrio molitor</em> bioconversion</td><td class="n">8.13%</td><td>Li et al. 2015</td></tr>
+    <tr><td>Feed excreted as frass</td><td class="n">78.43%</td><td>Li et al. 2015</td></tr>
+    <tr><td>Nitrogen recovery from urine</td><td class="n">20.5%</td><td>Fu et al. 2016; Dong et al. 2017</td></tr>
+    <tr><td>Solid waste degradation</td><td class="n">41%</td><td>Fu et al. 2016</td></tr>
+    <tr><td>Food regenerated in the closed run</td><td class="n">55%</td><td>Fu et al. 2016</td></tr>
+    <tr><td>Carbon imported inside stored food</td><td class="n">247 g d⁻¹</td><td>Dong et al. 2017</td></tr>
+  </table>
+  <div class="note">
+    <span class="h">Two honest caveats</span>
+    <p>The <b>reef microcosm</b> compartment is speculative. No marine calcifying system has been
+      flown, and calcification is a local carbon dioxide source rather than a sink. It is included
+      as a design probe and labelled as such throughout.</p>
+    <p><b>The model is a game.</b> Its constants are balanced for play, and nothing here is a
+      measurement of a physical life support system. Between-seed variance in the economics
+      experiment is exactly zero because the scripted policy suppresses the event deck — the
+      seeds test reproducibility, not robustness.</p>
+  </div>
+</section>
+
+<section>
+  <span class="num">07 — Reproducing</span>
+  <h2>Every figure regenerates</h2>
+  <p>The sweep loads the game's own <code>data.js</code> and <code>sim.js</code> and seeds
+    <code>Math.random</code>, so the analysis measures the code that ships and cannot drift
+    from it.</p>
+<pre>node code/01_sweep.js
+python3 code/02_carbon_stability.py
+python3 code/03_diversity_economics.py
+python3 code/04_compartment_knockout.py
+python3 code/05_night_resilience.py</pre>
+</section>
+
+<footer>
+  <a href="https://github.com/dr-richard-barker/LunarFarm-BLSS">LunarFarm-BLSS</a> ·
+  model: <a href="https://github.com/dr-richard-barker/LunarSims">LunarSims</a> · MIT<br>
+  Richard Barker · Center for Space Enabled Research in Agriculture
+</footer>
+
+</div>
+</body>
+</html>

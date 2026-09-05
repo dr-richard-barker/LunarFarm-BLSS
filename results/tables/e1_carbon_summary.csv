@@ -1,0 +1,9 @@
+arm,co2_floor,co2_floor_sd,co2_mean,harvests,survived,n,label
+algal_rotation,4.8945522004330915,0.0,68.95598533848752,16.0,1.0,8,spirulina in the rotation
+composter_only,5.124420190392664,0.0,77.02121481102938,12.0,1.0,8,oxidation loop only
+nitrifier,5.124420190392664,0.0,77.02121481102938,12.0,1.0,8,nitrifying bioreactor
+none,5.124420190392664,0.0,77.02121481102938,12.0,1.0,8,no compartment
+worms,5.57788095449491,0.0,87.28332360393782,13.0,1.0,8,mealworm tier
+all_four,5.930250094578416,0.0,157.73733869496473,14.0,1.0,8,all four compartments
+fungal_rotation,6.243553522904154,0.0,149.90805834724566,16.0,1.0,8,mushrooms in the rotation
+digester,79.38712950000057,0.0,217.21161142820023,14.0,1.0,8,anaerobic digester
