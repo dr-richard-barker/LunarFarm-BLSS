@@ -10,6 +10,14 @@ decision-maker is inside the loop.
 
 Read the write-up: **[`manuscript_chapter.md`](manuscript_chapter.md)**.
 
+## New: minimal consortium module (in progress)
+
+[`consortium/`](consortium/) asks a different question than the four findings below: not what
+the *game* shows, but what a *real* minimal plant+fungal+microbial consortium would need to be to
+back a closed loop like this one. Milestone 1 (real taxon inventory + a GEM sanity check on the
+one real metabolic model in the portfolio) is done — see
+[`consortium/FINDINGS.md`](consortium/FINDINGS.md). No consortium composition claim yet.
+
 ## The four findings
 
 1. **Only an anaerobic digester lifts the carbon floor.** Across eight seeded runs per arm, with
@@ -54,6 +62,7 @@ data/                          raw sweep output, committed
 results/figures/  tables/      every figure and table, all generated
 manuscript_chapter.md          the write-up
 docs/                          GitHub Pages summary
+consortium/                    minimal-consortium module (see consortium/README.md) — in progress
 ```
 
 ## Reproducing

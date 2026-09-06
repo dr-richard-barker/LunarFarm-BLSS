@@ -1,0 +1,5 @@
+model,reactions,metabolites,genes,has_biomass_reaction,objective_expression,fba_status,growth_flux,growth_flux_meaningful
+PC9.15_gapfilled,5414,5317,1042,True,1.0*BIOMASS_fungal - 1.0*BIOMASS_fungal_reverse_7ed44,optimal,125.0,True
+PC9.15_medium,5410,5317,1042,False,0,optimal,0.0,False
+BOM_ss5_gapfilled,5247,5140,881,True,1.0*BIOMASS_fungal - 1.0*BIOMASS_fungal_reverse_7ed44,optimal,125.0,True
+BOM_ss5_medium,5243,5140,881,False,0,optimal,0.0,False
