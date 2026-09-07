@@ -76,7 +76,11 @@ def load_real_upsettr_taxa():
         header = next(reader)
         for row in reader:
             for v in row:
-                v = v.strip()
+                # source file mixes "Genus species" and "Genus_species" for
+                # the same taxon across columns -- normalize before counting,
+                # otherwise the same species can land on both sides of the
+                # contamination filter under two different spellings.
+                v = " ".join(v.replace("_", " ").split())
                 if v:
                     counts[v] += 1
     return counts.most_common()

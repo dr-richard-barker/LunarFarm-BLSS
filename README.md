@@ -14,9 +14,11 @@ Read the write-up: **[`manuscript_chapter.md`](manuscript_chapter.md)**.
 
 [`consortium/`](consortium/) asks a different question than the four findings below: not what
 the *game* shows, but what a *real* minimal plant+fungal+microbial consortium would need to be to
-back a closed loop like this one. Milestone 1 (real taxon inventory + a GEM sanity check on the
-one real metabolic model in the portfolio) is done — see
-[`consortium/FINDINGS.md`](consortium/FINDINGS.md). No consortium composition claim yet.
+back a closed loop like this one. Milestone 1 is done — real taxon inventory, a GEM sanity check,
+and a contamination filter against 3 cited reference lists. Result so far: the strongest apparent
+taxonomic signal in the real data is mostly reagent/handling contamination, not plant
+colonization — see [`consortium/FINDINGS.md`](consortium/FINDINGS.md). No consortium composition
+claim yet.
 
 ## The four findings
 
