@@ -42,40 +42,54 @@ the guild-classification *method*, which is real and reusable, but every row
 from it is tagged `illustrative_model` and should not be read as confirmed
 spaceflight microbiome composition.
 
-## 4. The one real GEM in the portfolio grows under its unconstrained variant; its medium-constrained variant is broken, not merely restrictive
+## 4. Correction: the one real GEM in the portfolio is not broken — `_medium.xml` is a superseded intermediate, and `_gapfilled.xml` is the real medium-constrained model
 
-FBA on all four existing GEM files (`Myco_tissue_RNAseq/models/*.xml`,
-*Pleurotus ostreatus*):
+The original version of this finding claimed the `*_medium.xml` files were
+missing their biomass objective due to a build defect. That was a
+misdiagnosis on this module's part, caught after reading
+`Myco_tissue_RNAseq/NOTES.md` §10b and §14 and its pipeline scripts directly
+rather than just probing the SBML files. The real story:
+
+`16_gem_medium.py` builds `*_medium.xml` as a **connectivity diagnostic
+only** — its own docstring says so explicitly: "It does NOT claim a
+validated growth prediction. There is still no curated biomass objective."
+`26_gem_gapfill_targeted.py` then reads `*_medium.xml` as *input*
+(`--model` defaults to it), gapfills the remaining blocked cofactor
+precursors, constructs a fresh `BIOMASS_fungal` reaction, sets it as the
+objective, and writes `*_gapfilled.xml` — which is therefore the medium
+constraint *and* a working objective, not a separate unconstrained variant.
+`*_medium.xml` was never meant to carry flux on its own; it's a pipeline
+stage, not a deliverable.
+
+FBA on all four files, corrected reading:
 
 | model | reactions | has biomass reaction | objective | growth flux |
 |---|---|---|---|---|
-| PC9.15_gapfilled | 5,414 | yes | `BIOMASS_fungal` | 125 (uncalibrated) |
-| PC9.15_medium | 5,410 | **no** | none (`0`) | not meaningful |
-| BOM_ss5_gapfilled | 5,247 | yes | `BIOMASS_fungal` | 125 (uncalibrated) |
-| BOM_ss5_medium | 5,243 | **no** | none (`0`) | not meaningful |
+| PC9.15_gapfilled | 5,414 | yes | `BIOMASS_fungal` | 125 (uncalibrated, on MNM v3 medium) |
+| PC9.15_medium | 5,410 | no (by design — pipeline input, not a deliverable) | none (`0`) | not applicable |
+| BOM_ss5_gapfilled | 5,247 | yes | `BIOMASS_fungal` | 125 (uncalibrated, on MNM v3 medium) |
+| BOM_ss5_medium | 5,243 | no (by design — pipeline input, not a deliverable) | none (`0`) | not applicable |
 
-Both `_gapfilled` variants carry an intact objective — the biomass reaction
-itself is self-labeled `"Coarse fungal biomass (uncurated)"` in the model, so
-125 is not yet a calibrated growth rate, just a nonzero feasible flux. Both
-`_medium` variants are **missing the biomass reaction/objective link
-entirely** — cobrapy reports "No objective coefficients in model" and finds
-zero reactions matching `biomass` by name. This is a model-building defect in
-how the medium-constrained variant was derived from the gapfilled one (4–5
-reactions were dropped, apparently including the objective), not a biological
-"doesn't grow in this medium" result. It needs a fix in `Myco_tissue_RNAseq`
-itself before any co-culture screen can use the medium-constrained model.
+The growth flux of 125.0 for both references is not a new result — it
+independently reproduces `Myco_tissue_RNAseq/NOTES.md` §14c's own reported
+number exactly, which is a genuine (if small) cross-validation rather than a
+new finding. `Myco_tissue_RNAseq`'s README and a new `models/README.md` have
+since been updated upstream to make this explicit, so the next reader
+doesn't repeat this mistake.
 
 ## What this means for milestone 3
 
-The real, usable evidence right now is thinner than the roadmap doc assumed:
-one real GEM (only half-usable as shipped), and a taxon list where more
-entries are "uncertain / likely contamination" than "candidate consortium
-member." Two prerequisites before the flux-balance co-culture screen:
+The real, usable evidence is better than the corrected finding above implies
+for the GEM side — `*_gapfilled.xml` is a working, medium-constrained model,
+no upstream fix needed — but the taxon side still has the real problem from
+findings 1–3: more entries are "uncertain / likely contamination" than
+"candidate consortium member." One prerequisite remains before the
+flux-balance co-culture screen:
 
-1. Fix the `_medium` GEM variants in `Myco_tissue_RNAseq` (restore the
-   biomass objective link).
-2. Narrow the real taxon list with an actual contamination filter (e.g.
+1. Narrow the real taxon list with an actual contamination filter (e.g.
    comparison against a reagent/cleanroom contaminant reference list) instead
    of genus-level literature guesses.
+2. ~~Fix the `_medium` GEM variants in `Myco_tissue_RNAseq`~~ — resolved:
+   there was nothing to fix; use `*_gapfilled.xml` directly.
 
 No consortium composition claim is made at this milestone.

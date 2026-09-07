@@ -5,6 +5,11 @@ the portfolio (Myco_tissue_RNAseq's Pleurotus ostreatus GEM) actually grow?
 This is a sanity check, not a consortium screen -- it has to pass before any
 co-culture flux-balance work (milestone 3) is worth attempting. Requires
 `pip install cobra` and a sibling checkout of Myco_tissue_RNAseq.
+
+Note: the two *_medium.xml files are EXPECTED to report no biomass reaction
+and no objective -- that's not a defect, it's a pipeline intermediate (see
+Myco_tissue_RNAseq/models/README.md). Use *_gapfilled.xml for anything that
+needs a working objective; it already carries the same medium constraints.
 """
 import csv
 import warnings
