@@ -120,6 +120,14 @@ function run(cfg) {
        way the game's own auto-manage does */
     if (cfg.restock && s.food < S.dailyNeed(s) * 12 && s.credits > 2000) S.trade(s, 'food', 30000);
 
+    /* The carbon and night experiments answer a question that starvation timing
+       would otherwise end the run before reaching, so they hold food
+       non-limiting by construction — the same control as worked beds, and
+       necessary once the deck is live, because the broker's resupply offer will
+       otherwise sell the larder down to a twelve-day reserve and reintroduce
+       exactly the confound the deep pantry was there to remove. */
+    if (cfg.holdFood) s.food = Math.max(s.food, cfg.food || 6e6);
+
     co2Floor = Math.min(co2Floor, s.co2);
     if (s.credits < 1500) { brokeRun++; brokeWorst = Math.max(brokeWorst, brokeRun); } else brokeRun = 0;
     series.push({
@@ -157,6 +165,7 @@ const PLANTS = ['potato', 'romaine', 'radish', 'wheat', 'pakchoi', 'zinnia', 'du
 const FUNGAL = ['potato', 'romaine', 'oyster', 'wheat', 'pakchoi', 'oyster', 'duckweed', 'kale', 'onion', 'sweetpotato'];
 const ALGAL  = ['potato', 'romaine', 'spirulina', 'wheat', 'pakchoi', 'spirulina', 'duckweed', 'kale', 'onion', 'sweetpotato'];
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8].map(n => n * 104729);
+const SEEDS12 = Array.from({ length: 12 }, (_, i) => (i + 1) * 60013);
 
 function writeCSV(name, rows) {
   if (!rows.length) return;
@@ -286,7 +295,6 @@ function runWithBatteries(cfg, batteries) {
 /* ---------- E5: the same economics question, with the deck live ---------- */
 function E5() {
   console.log('E5 diversity economics under a stochastic policy');
-  const SEEDS12 = Array.from({ length: 12 }, (_, i) => (i + 1) * 60013);
   const rows = [];
   for (let breadth = 1; breadth <= 10; breadth++) {
     for (const sd of SEEDS12) {
@@ -303,8 +311,78 @@ function E5() {
   writeCSV('e5_diversity_stochastic.csv', rows);
 }
 
+/* ---------- E6-E8: E1, E3 and E4 again, with the deck live ----------
+
+   Same arms, same measurements, same seeds; the only change is the policy. If a
+   conclusion drawn from a deterministic trajectory does not survive twelve
+   noisy operators, it was a property of the manager rather than of the loop. */
+
+function E6() {
+  console.log('E6 carbon stability under a stochastic policy');
+  const arms = [
+    ['none', [], PLANTS], ['worms', ['worms'], PLANTS],
+    ['nitrifier', ['nitrifier'], PLANTS], ['digester', ['digester'], PLANTS],
+    ['all_four', ['worms', 'nitrifier', 'digester', 'reef'], PLANTS],
+    ['fungal_rotation', [], FUNGAL], ['algal_rotation', [], ALGAL]
+  ];
+  const rows = [];
+  for (const [arm, comp, mix] of arms) {
+    for (const sd of SEEDS12) {
+      const r = run({ seed: sd, compartments: comp, mix, days: 300,
+                      food: 6e6, holdFood: true, workedBeds: true,
+                      buyCO2: false, halls: 8, stochastic: true });
+      rows.push({ arm, seed: sd, survived: r.survived ? 1 : 0, end_day: r.end_day,
+                  co2_floor: r.co2_floor, co2_mean: r.co2_mean, o2_mean: r.o2_mean,
+                  harvests: r.harvests, failure: r.failure });
+    }
+  }
+  writeCSV('e6_carbon_stochastic.csv', rows);
+}
+
+function E7() {
+  console.log('E7 compartment knockout under a stochastic policy');
+  const all = ['worms', 'nitrifier', 'digester', 'reef'];
+  const arms = [['none', []], ['all', all]]
+    .concat(all.map(t => ['only_' + t, [t]]))
+    .concat(all.map(t => ['without_' + t, all.filter(x => x !== t)]));
+  const rows = [];
+  for (const [arm, comp] of arms) {
+    for (const sd of SEEDS12) {
+      const r = run({ seed: sd, compartments: comp, mix: PLANTS, days: 260,
+                      food: 6e6, holdFood: true, workedBeds: true, buyCO2: false,
+                      offtake: true, halls: 8, stochastic: true });
+      rows.push({ arm, seed: sd, co2_floor: r.co2_floor, co2_mean: r.co2_mean,
+                  ls_share_mean: r.ls_share_mean, waste_processed: r.waste_processed,
+                  service_total: r.service_total, harvests: r.harvests,
+                  survived: r.survived ? 1 : 0, end_day: r.end_day });
+    }
+  }
+  writeCSV('e7_knockout_stochastic.csv', rows);
+}
+
+function E8() {
+  console.log('E8 night resilience under a stochastic policy');
+  const rows = [];
+  for (const darkFrac of [0, 0.2, 0.4, 0.6, 0.8, 1.0]) {
+    for (const batteries of [0, 3]) {
+      for (const sd of SEEDS12) {
+        const n = 10, mix = [];
+        for (let i = 0; i < n; i++) mix.push(i < Math.round(darkFrac * n) ? 'oyster' : 'romaine');
+        const r = runWithBatteries({ seed: sd, compartments: [], mix, days: 200,
+                                     food: 6e6, holdFood: true, workedBeds: true,
+                                     buyCO2: true, halls: 8, stochastic: true }, batteries);
+        rows.push({ dark_frac: darkFrac, batteries, seed: sd, shed_mean: r.shed_mean,
+                    harvests: r.harvests, survived: r.survived ? 1 : 0,
+                    co2_mean: r.co2_mean, o2_mean: r.o2_mean,
+                    end_day: r.end_day, failure: r.failure });
+      }
+    }
+  }
+  writeCSV('e8_night_stochastic.csv', rows);
+}
+
 const which = process.argv.slice(2);
-const ALL = { E1, E2, E3, E4, E5 };
+const ALL = { E1, E2, E3, E4, E5, E6, E7, E8 };
 const todo = which.length ? which : Object.keys(ALL);
 console.log('Lunar Farm BLSS sweep — driving', GAME);
 for (const k of todo) {

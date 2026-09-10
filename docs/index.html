@@ -86,7 +86,7 @@ footer a{color:var(--ink-soft)}
     which incentives make closing it a rational choice.</p>
   <div class="byline">
     <span><b>Model</b> <a href="https://github.com/dr-richard-barker/LunarSims">Lunar Farm</a></span>
-    <span><b>Runs</b> 394 seeded, across five experiments</span>
+    <span><b>Runs</b> 742 seeded, across eight experiments</span>
     <span><b>Code</b> <a href="https://github.com/dr-richard-barker/LunarFarm-BLSS">LunarFarm-BLSS</a></span>
   </div>
 </header>
@@ -105,6 +105,8 @@ footer a{color:var(--ink-soft)}
       60%, every run ends on oxygen — not on food</span></div>
     <div class="card"><b>2.93×</b><span>the same diversity result re-run with the event deck live
       and the manager jittered — against 2.94× deterministic</span></div>
+    <div class="card"><b>4 of 4</b><span>headline conclusions that survive being re-run with a
+      noisy operator at the controls — two secondary ones do not</span></div>
   </div>
 </section>
 
@@ -201,6 +203,16 @@ footer a{color:var(--ink-soft)}
       is the new part: almost all the run-to-run spread is in <em>when the farm died</em>, not in
       how well it traded while alive.</figcaption>
   </figure>
+  <figure>
+    <img src="figures/fig6_robustness.png" alt="Three panels. A: grouped bars of the lowest CO2 buffer per arm, deterministic against stochastic, with the digester at about 80 kg in both. B: horizontal bars of marginal carbon contribution given the other three compartments, with the nitrifier strongly negative at minus 86 kg, digester and reef positive, and the mealworm not significant. C: survival against dark-grown fraction, deterministic and stochastic curves both falling to zero between 40 and 60 percent.">
+    <figcaption>All four experiments re-run with twelve noisy operators. The digester's carbon
+      floor holds at 15.1× (p = 7 × 10⁻²¹), the negative nitrifier interaction grows to
+      −86.0 ± 8.7 kg (p = 6 × 10⁻⁸), and the oxygen cliff sits at the same boundary. Two secondary
+      readings change: a mealworm tier has <em>no detectable</em> carbon effect (p = 0.73), and a
+      fungal rotation's floor is far higher and far more variable than one trajectory suggested
+      (31.3 ± 20.5 kg against 6.2). The deterministic arms were not wrong so much as
+      unquantified.</figcaption>
+  </figure>
   <div class="note">
     <span class="h">The first attempt killed every run</span>
     <p>Answering the deck uniformly at random ended all 120 runs, most inside a month: a coin toss
@@ -251,7 +263,8 @@ python3 code/02_carbon_stability.py
 python3 code/03_diversity_economics.py
 python3 code/04_compartment_knockout.py
 python3 code/05_night_resilience.py
-python3 code/06_stochastic_policy.py</pre>
+python3 code/06_stochastic_policy.py
+python3 code/07_robustness.py</pre>
 </section>
 
 <footer>

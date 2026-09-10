@@ -39,12 +39,21 @@ claim yet.
    more of the farm is grown in the dark, but every run at or above 60% fails — on **oxygen**, not
    food, with a saturated carbon buffer and 700+ days of stores untouched. Heterotrophs are a
    supplement, never a substitute.
-5. **The diversity result survives a worse operator.** Re-run with the event deck live and the
+5. **Every conclusion survives a worse operator — and two secondary ones change.** Re-run with the event deck live and the
    manager's thresholds jittered per run, the ratio is **2.93×** against 2.94× deterministic
    (r = 0.967, p = 5.5 × 10⁻⁷², 120 runs), and survival is flat at 58% across every rotation
    breadth — so run length is not driving it. The variance decomposition is the new part: the
    coefficient of variation of total earnings is 34–38%, but of the *earning rate* only 1–8%. The
    noise decides whether a farm survives, not how well it trades once it does.
+
+   All four experiments were re-run this way. The digester's carbon floor holds at 15.1× against
+   15.6× (p = 7 × 10⁻²¹); the negative nitrifier interaction gets *larger* at −86.0 ± 8.7 kg
+   (p = 6 × 10⁻⁸); the oxygen cliff sits at the same 40–60% boundary, with 75% of failures above
+   it being oxygen exhaustion. Two secondary readings change once there is a spread attached:
+   a **mealworm tier has no detectable carbon effect at all** (−4.2 ± 11.7 kg, p = 0.73, where the
+   deterministic run implied a small negative), and a **fungal rotation's carbon floor is both far
+   higher and far more variable** than one trajectory suggested (31.3 ± 20.5 kg against 6.2). The
+   deterministic arms were not wrong so much as unquantified.
 
 ## Two notes on method
 
@@ -73,6 +82,7 @@ code/01_sweep.js               drives the game's own sim.js — writes data/*.cs
     04_compartment_knockout.py E3 — each compartment alone and given the others
     05_night_resilience.py     E4 — how far a farm can lean on dark-grown crops
     06_stochastic_policy.py    E5 — does the diversity result hold with the deck live
+    07_robustness.py           E6-E8 — E1, E3 and E4 again, with the deck live
 data/                          raw sweep output, committed
 results/figures/  tables/      every figure and table, all generated
 manuscript_chapter.md          the write-up
@@ -92,6 +102,7 @@ python3 code/03_diversity_economics.py
 python3 code/04_compartment_knockout.py
 python3 code/05_night_resilience.py
 python3 code/06_stochastic_policy.py
+python3 code/07_robustness.py
 ```
 
 `01_sweep.js` resolves the game with `LUNARFARM_DIR`, defaulting to `../LunarSims/farm`. It loads
@@ -122,12 +133,12 @@ than a sink.
 ## Limitations
 
 The model is a game; its constants are balanced for play, and nothing here is a measurement of a
-physical life support system. Between-seed variance in E1–E4 is zero by construction, because
-their scripted policy suppresses the event deck — the model's only stochastic element — so those
-seeds test reproducibility rather than robustness. E5 addresses this for the economics result and
-reproduces it; E1, E3 and E4 have not been re-run stochastically. E5's own operator model (0.75
-remedial) is chosen, not measured. No human players were involved in any of these measurements.
-See §6 of the manuscript.
+physical life support system. E1–E4 are deterministic by construction — their scripted policy
+suppresses the event deck, the model's only stochastic element — so those seeds test
+reproducibility rather than robustness. E5–E8 re-run all four stochastically and every headline
+conclusion reproduces; where the two disagree, the stochastic figure is the one with an interval
+attached. The stochastic operator model (0.75 remedial) is itself chosen, not measured. No human
+players were involved in any of these measurements. See §6 of the manuscript.
 
 ## Licence
 

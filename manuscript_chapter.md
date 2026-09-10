@@ -24,12 +24,16 @@ the fortnight of lunar night? Load shedding falls monotonically with dark-grown 
 every run above 40% ends on oxygen exhaustion rather than starvation, placing the optimum near
 20%. We also report a negative marginal interaction: adding a nitrifying bioreactor *reduces* the
 system's mean carbon buffer by 60.6 kg when a digester is present, because the two compartments
-compete for the same waste stream. Re-running the economics under a stochastic
+compete for the same waste stream. Re-running all four experiments under a stochastic
 policy — the event deck answered rather than suppressed, and the manager's own thresholds
-jittered per run — reproduces the diversity result almost exactly (2.93× against 2.94×,
-r = 0.967, p = 5.5 × 10⁻⁷²) with genuine between-run variance, and shows that the model's
-stochasticity mostly determines *whether* a farm survives rather than how well it earns once it
-does. We argue that the methodological lesson generalises — our own first, uncontrolled
+jittered per run — reproduces every conclusion: the diversity ratio at 2.93× against 2.94×
+(r = 0.967, p = 5.5 × 10⁻⁷²), the digester's carbon floor at 15.1× against 15.6×
+(p = 7 × 10⁻²¹), the negative nitrifier interaction at −86.0 ± 8.7 kg (p = 6 × 10⁻⁸), and the
+oxygen cliff at the same 40–60% boundary. Two findings change under noise: a mealworm tier's
+carbon effect is not distinguishable from zero (p = 0.73) where the deterministic run implied a
+small negative, and a fungal rotation's floor becomes both much higher and far more variable
+(31.3 ± 20.5 kg against 6.2). The variance decomposition shows the model's stochasticity mostly
+determines *whether* a farm survives rather than how well it earns once it does. We argue that the methodological lesson generalises — our own first, uncontrolled
 comparison of these arms produced a confidently wrong answer, and our first attempt at adding
 noise killed every run — and that human-in-the-loop models are a useful complement to
 steady-state BLSS analysis precisely because they expose which incentives a designer must supply
@@ -157,6 +161,11 @@ economics, rotation breadth 1–10 × studio on/off × five seeds, 240 days. **E
 knockout — each alone, all four, and all-but-one — five seeds, 260 days. **E4** night resilience,
 dark-grown fraction 0–100% × two battery configurations × five seeds, 200 days. **E5** the E2
 question again under a stochastic policy, rotation breadth 1–10 × twelve seeds, 240 days.
+**E6–E8** E1, E3 and E4 again under the same stochastic policy, twelve seeds each.
+
+E1, E3, E6 and E8 hold food non-limiting. That control becomes load-bearing once the deck is
+live: the broker's resupply offer sells the larder down to a twelve-day reserve, which would
+reintroduce exactly the starvation confound the deep pantry exists to remove.
 
 The stochastic policy in E5 answers the event deck instead of suppressing it and jitters the
 manager's watering and feeding thresholds per run, with a small chance of skipping a day's
@@ -266,6 +275,41 @@ while alive. In this model, stochasticity is close to a survival lottery layered
 deterministic economy — which is worth knowing before treating spread in any outcome here as
 evidence about the economy itself.
 
+#### 4.6 Every conclusion survives a noisy operator, and two of them change (E6–E8)
+
+![Robustness](results/figures/fig6_robustness.png)
+
+Re-running the carbon, knockout and night experiments with the deck live and twelve seeds each
+leaves all three headline conclusions standing, and sharpens two of the secondary ones.
+
+**The carbon floor (E6 against E1).** The digester holds a floor of 80.3 ± 1.9 kg against
+5.3 ± 0.5 kg with no compartment — a factor of 15.1, against 15.6 deterministic
+(Welch t = 131.8, p = 7.0 × 10⁻²¹). Every other arm stays at the floor, as before.
+
+The exception is instructive. A **fungal rotation's floor rises to 31.3 ± 20.5 kg** under noise,
+against 6.2 kg deterministic. The standard deviation is two-thirds of the mean: in some runs the
+mushrooms lift the floor substantially and in others not at all. The deterministic trajectory
+reported a single draw from that distribution and, by reporting it without a spread, understated
+both the effect and the uncertainty. This is the same lesson as §3 in a milder form — a single
+trajectory is not a measurement.
+
+**The negative interaction (E7 against E3).** The nitrifying bioreactor's marginal contribution
+is **−86.0 ± 8.7 kg** (p = 6.5 × 10⁻⁸), larger than the −60.6 kg the deterministic run showed and
+now with an interval that excludes zero comfortably. The digester (+49.5 ± 8.2 kg,
+p = 5.8 × 10⁻⁵) and the reef (+24.6 ± 9.3 kg, p = 0.016) remain positive.
+
+The mealworm tier does not: **−4.2 ± 11.7 kg, p = 0.73**. The deterministic run reported −6.5 kg,
+which we described as a food play rather than a carbon one. With an interval attached, the
+correct statement is stronger and simpler — a mealworm tier has *no detectable effect* on the
+carbon budget in either direction.
+
+**The oxygen cliff (E8 against E4).** Survival is 75% at dark-grown fractions of 0, 20 and 40%,
+and **0% at 60, 80 and 100%** — the same boundary as the deterministic sweep, which showed 100%
+and 0%. The baseline 25% mortality below the cliff is the event deck taking farms that the
+deterministic policy steered through. Of the failures above it, **75% are oxygen exhaustion** and
+the rest are the deck; mean oxygen falls monotonically from 374 kg at no dark-grown crops to
+179 kg at all of them. The cliff is not an artefact of a single manager.
+
 ### 5. Discussion
 
 Three things follow.
@@ -290,16 +334,24 @@ Modelling a worse operator requires deciding what "worse" means — here, someon
 the remedial thing and occasionally does not — and that decision is a modelling choice with the
 same standing as any parameter.
 
+**A single trajectory is not a measurement.** Re-running every experiment with twelve noisy
+operators left all four headline conclusions intact, which is reassuring, but it also changed two
+secondary readings: an effect we had called small and negative turned out to be indistinguishable
+from zero, and one we had called negligible turned out to be large and highly variable. Neither
+error would have been visible without a spread. The deterministic arms were not wrong so much as
+unquantified.
+
 ### 6. Limitations
 
 - **The model is a game.** Its constants are balanced for play. The ratios drawn from Lunar
   Palace 1 are real; the throughputs they are applied to are not. Nothing here should be cited as
   a measurement of a physical BLSS.
-- **Between-seed variance in E1–E4 is zero by construction.** The scripted policy in those
-  experiments suppresses the event deck, the model's only stochastic element, so their seeds test
-  reproducibility rather than robustness. E5 addresses this for the economics result and
-  reproduces it; E1, E3 and E4 have not been re-run stochastically, and their arms should be read
-  as single deterministic trajectories rather than as sampled distributions.
+- **E1–E4 remain deterministic as reported**, and their seeds test reproducibility rather than
+  robustness. Every one of them has been re-run stochastically (E5–E8) and every headline
+  conclusion reproduced, so the deterministic arms should be read as clean trajectories rather
+  than as unreliable ones — but where the two disagree, as for the fungal rotation's carbon floor
+  and the mealworm tier's absence of effect, the stochastic figure is the one with an interval
+  attached and is the one to cite.
 - **The stochastic policy is itself a model.** E5's operator takes the remedial choice with
   probability 0.75. That number is chosen, not measured, and a different value would move the
   survival rate — though the diversity trend is a within-policy comparison and is unlikely to
@@ -319,6 +371,7 @@ python3 code/03_diversity_economics.py
 python3 code/04_compartment_knockout.py
 python3 code/05_night_resilience.py
 python3 code/06_stochastic_policy.py
+python3 code/07_robustness.py
 ```
 
 The sweep resolves the game directory from `LUNARFARM_DIR`, defaulting to a sibling
