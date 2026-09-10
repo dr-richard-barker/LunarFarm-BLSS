@@ -39,17 +39,29 @@ claim yet.
    more of the farm is grown in the dark, but every run at or above 60% fails — on **oxygen**, not
    food, with a saturated carbon buffer and 700+ days of stores untouched. Heterotrophs are a
    supplement, never a substitute.
+5. **The diversity result survives a worse operator.** Re-run with the event deck live and the
+   manager's thresholds jittered per run, the ratio is **2.93×** against 2.94× deterministic
+   (r = 0.967, p = 5.5 × 10⁻⁷², 120 runs), and survival is flat at 58% across every rotation
+   breadth — so run length is not driving it. The variance decomposition is the new part: the
+   coefficient of variation of total earnings is 34–38%, but of the *earning rate* only 1–8%. The
+   noise decides whether a farm survives, not how well it trades once it does.
 
-## A note on method
+## Two notes on method
 
-Our first, uncontrolled comparison gave a confidently wrong answer. A plants-only farm failed in
+**The controls mattered.** Our first, uncontrolled comparison gave a confidently wrong answer. A plants-only farm failed in
 3 of 3 runs while a mushroom rotation survived in 3 of 3, which looked like proof that a respiring
 compartment rescues the carbon loop. It was not: a photosynthetic control survived too, and once
 starvation timing and raw-regolith growth were controlled, the mushroom rotation turned out to
 raise the mean buffer and not its floor. The effect was harvest cadence, not respiration.
 
-That failure is documented in §3 of the manuscript rather than quietly corrected, because it is
-the most transferable thing here.
+**So did the shape of the noise.** Our first stochastic policy answered the event deck uniformly
+at random, and every one of 120 runs died — most inside a month. A coin toss never patches a hull,
+so pressure walks to the abort limit, and it takes the broker's offer to sell the larder down to a
+twelve-day reserve. That would have supported the conclusion that the economy is fragile; it was
+the policy that was fragile. Adding noise is not the same as modelling a worse operator.
+
+Both failures are documented in the manuscript rather than quietly corrected, because they are the
+most transferable things here.
 
 ## Layout
 
@@ -60,6 +72,7 @@ code/01_sweep.js               drives the game's own sim.js — writes data/*.cs
     03_diversity_economics.py  E2 — does variety pay, and which stream pays for it
     04_compartment_knockout.py E3 — each compartment alone and given the others
     05_night_resilience.py     E4 — how far a farm can lean on dark-grown crops
+    06_stochastic_policy.py    E5 — does the diversity result hold with the deck live
 data/                          raw sweep output, committed
 results/figures/  tables/      every figure and table, all generated
 manuscript_chapter.md          the write-up
@@ -78,6 +91,7 @@ python3 code/02_carbon_stability.py
 python3 code/03_diversity_economics.py
 python3 code/04_compartment_knockout.py
 python3 code/05_night_resilience.py
+python3 code/06_stochastic_policy.py
 ```
 
 `01_sweep.js` resolves the game with `LUNARFARM_DIR`, defaulting to `../LunarSims/farm`. It loads
@@ -108,10 +122,12 @@ than a sink.
 ## Limitations
 
 The model is a game; its constants are balanced for play, and nothing here is a measurement of a
-physical life support system. Between-seed variance in E2 is exactly zero because the scripted
-policy suppresses the event deck, the model's only stochastic element — the seeds test
-reproducibility, not robustness. All arms share one management policy, and no human players were
-involved in these measurements. See §6 of the manuscript.
+physical life support system. Between-seed variance in E1–E4 is zero by construction, because
+their scripted policy suppresses the event deck — the model's only stochastic element — so those
+seeds test reproducibility rather than robustness. E5 addresses this for the economics result and
+reproduces it; E1, E3 and E4 have not been re-run stochastically. E5's own operator model (0.75
+remedial) is chosen, not measured. No human players were involved in any of these measurements.
+See §6 of the manuscript.
 
 ## Licence
 

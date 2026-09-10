@@ -86,7 +86,7 @@ footer a{color:var(--ink-soft)}
     which incentives make closing it a rational choice.</p>
   <div class="byline">
     <span><b>Model</b> <a href="https://github.com/dr-richard-barker/LunarSims">Lunar Farm</a></span>
-    <span><b>Runs</b> 274 seeded, across four experiments</span>
+    <span><b>Runs</b> 394 seeded, across five experiments</span>
     <span><b>Code</b> <a href="https://github.com/dr-richard-barker/LunarFarm-BLSS">LunarFarm-BLSS</a></span>
   </div>
 </header>
@@ -103,6 +103,8 @@ footer a{color:var(--ink-soft)}
       system when a digester is present: they compete for the same waste</span></div>
     <div class="card"><b>~20%</b><span>the optimum share of the farm grown in the dark. Above
       60%, every run ends on oxygen — not on food</span></div>
+    <div class="card"><b>2.93×</b><span>the same diversity result re-run with the event deck live
+      and the manager jittered — against 2.94× deterministic</span></div>
   </div>
 </section>
 
@@ -186,7 +188,33 @@ footer a{color:var(--ink-soft)}
 </section>
 
 <section>
-  <span class="num">06 — Provenance</span>
+  <span class="num">06 — Robustness</span>
+  <h2>It holds with a worse operator at the controls</h2>
+  <p>The first four experiments suppress the event deck, which is the model's only stochastic
+    element — so their seeds test reproducibility, not robustness. Re-running the economics with
+    the deck answered and the manager's own thresholds jittered per run gives the seeds something
+    to disagree about.</p>
+  <figure>
+    <img src="figures/fig5_stochastic_policy.png" alt="Left: broadcast revenue per day survived rising from about 184 to 512 credits across rotation breadths one to ten, with error bars, annotated r = 0.967 and a 2.93x ratio against 2.94x deterministic. Right: paired bars showing the coefficient of variation of total earnings at 34 to 38 percent against the earning rate at 1 to 8 percent.">
+    <figcaption>The ratio reproduces at 2.93× against 2.94×, and survival is flat at 58% across
+      every rotation breadth — so run length is not driving the trend. The variance decomposition
+      is the new part: almost all the run-to-run spread is in <em>when the farm died</em>, not in
+      how well it traded while alive.</figcaption>
+  </figure>
+  <div class="note">
+    <span class="h">The first attempt killed every run</span>
+    <p>Answering the deck uniformly at random ended all 120 runs, most inside a month: a coin toss
+      never patches a hull, so pressure walks down to the abort limit, and it accepts the broker's
+      offer to sell the larder down to a twelve-day reserve. That would have supported the
+      conclusion that the economy is fragile. It was the policy that was fragile.</p>
+    <p><b>Adding noise is not the same as modelling a worse operator.</b> The reported policy takes
+      the remedial choice with probability 0.75 — a competent operator having an occasional bad
+      day. That number is chosen, not measured.</p>
+  </div>
+</section>
+
+<section>
+  <span class="num">07 — Provenance</span>
   <h2>Where the parameters come from</h2>
   <p>Compartment ratios are taken from the Lunar Palace 1 ("Yuegong-1") 105-day multi-crew closed
     experiment of February–May 2014. The ratios are theirs; the throughputs they are applied to
@@ -213,7 +241,7 @@ footer a{color:var(--ink-soft)}
 </section>
 
 <section>
-  <span class="num">07 — Reproducing</span>
+  <span class="num">08 — Reproducing</span>
   <h2>Every figure regenerates</h2>
   <p>The sweep loads the game's own <code>data.js</code> and <code>sim.js</code> and seeds
     <code>Math.random</code>, so the analysis measures the code that ships and cannot drift
@@ -222,7 +250,8 @@ footer a{color:var(--ink-soft)}
 python3 code/02_carbon_stability.py
 python3 code/03_diversity_economics.py
 python3 code/04_compartment_knockout.py
-python3 code/05_night_resilience.py</pre>
+python3 code/05_night_resilience.py
+python3 code/06_stochastic_policy.py</pre>
 </section>
 
 <footer>

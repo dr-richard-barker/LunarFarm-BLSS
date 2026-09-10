@@ -24,10 +24,16 @@ the fortnight of lunar night? Load shedding falls monotonically with dark-grown 
 every run above 40% ends on oxygen exhaustion rather than starvation, placing the optimum near
 20%. We also report a negative marginal interaction: adding a nitrifying bioreactor *reduces* the
 system's mean carbon buffer by 60.6 kg when a digester is present, because the two compartments
-compete for the same waste stream. We argue that the methodological lesson generalises — our own
-first, uncontrolled comparison of these arms produced a confidently wrong answer — and that
-human-in-the-loop models are a useful complement to steady-state BLSS analysis precisely because
-they expose which incentives a designer must supply to make closure a rational choice.
+compete for the same waste stream. Re-running the economics under a stochastic
+policy — the event deck answered rather than suppressed, and the manager's own thresholds
+jittered per run — reproduces the diversity result almost exactly (2.93× against 2.94×,
+r = 0.967, p = 5.5 × 10⁻⁷²) with genuine between-run variance, and shows that the model's
+stochasticity mostly determines *whether* a farm survives rather than how well it earns once it
+does. We argue that the methodological lesson generalises — our own first, uncontrolled
+comparison of these arms produced a confidently wrong answer, and our first attempt at adding
+noise killed every run — and that human-in-the-loop models are a useful complement to
+steady-state BLSS analysis precisely because they expose which incentives a designer must supply
+to make closure a rational choice.
 
 ---
 
@@ -149,7 +155,17 @@ harvest cadence, not respiration.
 Experiments: **E1** carbon stability, eight arms × eight seeds, 300 days. **E2** diversity
 economics, rotation breadth 1–10 × studio on/off × five seeds, 240 days. **E3** compartment
 knockout — each alone, all four, and all-but-one — five seeds, 260 days. **E4** night resilience,
-dark-grown fraction 0–100% × two battery configurations × five seeds, 200 days.
+dark-grown fraction 0–100% × two battery configurations × five seeds, 200 days. **E5** the E2
+question again under a stochastic policy, rotation breadth 1–10 × twelve seeds, 240 days.
+
+The stochastic policy in E5 answers the event deck instead of suppressing it and jitters the
+manager's watering and feeding thresholds per run, with a small chance of skipping a day's
+tending. A first attempt answered the deck uniformly at random and **every one of 120 runs died,
+most inside a month**: a coin toss never patches a hull, so pressure walks down to the abort
+limit, and it accepts the broker's offer to sell the larder down to a twelve-day reserve. Adding
+noise is not the same as modelling a worse operator. The reported policy therefore takes the
+remedial choice — conventionally the first offered — with probability 0.75 and picks freely
+otherwise, which is a competent operator having an occasional bad day.
 
 ### 4. Results
 
@@ -228,6 +244,28 @@ left to replace the oxygen that the crew and the fungi are jointly burning.
 The optimum sits near 20%: at that fraction the farm sheds 43% rather than 51% of its called-for
 lighting while returning the same 21 harvests, and survives.
 
+#### 4.5 The diversity result survives a worse operator (E5)
+
+![Stochastic policy](results/figures/fig5_stochastic_policy.png)
+
+Under the stochastic policy 70 of 120 runs survive to day 240, and the seeds finally disagree
+with each other. Broadcast revenue per day survived rises from 184 credits at a single-crop
+rotation to 512 at ten (r = 0.967, p = 5.5 × 10⁻⁷² across all 120 runs); among survivors the
+total-earned ratio is **2.93×**, against 2.94× for the deterministic policy. The result is not an
+artefact of the scripted manager.
+
+Crucially, survival is **58% at every rotation breadth** (r = −0.000, p = 1.00). The deck and the
+jitter are seeded independently of what is planted, so the same seed meets the same alerts
+whatever the rotation — which removes the obvious confound, that wider rotations might simply
+survive longer and therefore earn more.
+
+The variance decomposition is the new information. The coefficient of variation of *total*
+earnings is 34–38% across every breadth, while the coefficient of variation of the *earning rate*
+is 1–8%. Almost all of the run-to-run spread is in when the farm died, not in how well it traded
+while alive. In this model, stochasticity is close to a survival lottery layered on a nearly
+deterministic economy — which is worth knowing before treating spread in any outcome here as
+evidence about the economy itself.
+
 ### 5. Discussion
 
 Three things follow.
@@ -246,15 +284,26 @@ was paid for than when we changed what it could build. Paying for closure rather
 made recycling compartments rational; pricing novelty made biodiversity rational. Neither
 required altering a single biological parameter.
 
+**Noise is not a free robustness check.** Our first stochastic policy killed every run, and would
+have supported the conclusion that the economy is fragile. It was the policy that was fragile.
+Modelling a worse operator requires deciding what "worse" means — here, someone who usually does
+the remedial thing and occasionally does not — and that decision is a modelling choice with the
+same standing as any parameter.
+
 ### 6. Limitations
 
 - **The model is a game.** Its constants are balanced for play. The ratios drawn from Lunar
   Palace 1 are real; the throughputs they are applied to are not. Nothing here should be cited as
   a measurement of a physical BLSS.
-- **Zero between-seed variance.** Standard deviations in E2 are exactly zero because the scripted
-  policy suppresses the event deck, which is the model's only stochastic element. The seeds
-  therefore test reproducibility, not robustness. A stochastic-policy sweep is the obvious next
-  step.
+- **Between-seed variance in E1–E4 is zero by construction.** The scripted policy in those
+  experiments suppresses the event deck, the model's only stochastic element, so their seeds test
+  reproducibility rather than robustness. E5 addresses this for the economics result and
+  reproduces it; E1, E3 and E4 have not been re-run stochastically, and their arms should be read
+  as single deterministic trajectories rather than as sampled distributions.
+- **The stochastic policy is itself a model.** E5's operator takes the remedial choice with
+  probability 0.75. That number is chosen, not measured, and a different value would move the
+  survival rate — though the diversity trend is a within-policy comparison and is unlikely to
+  reverse.
 - **A single management policy.** All arms share one scripted manager. A different policy could
   reorder the arms, and no human players were involved in these measurements.
 - **The reef is invented.** It is included as a design probe and is labelled as such throughout.
@@ -269,6 +318,7 @@ python3 code/02_carbon_stability.py
 python3 code/03_diversity_economics.py
 python3 code/04_compartment_knockout.py
 python3 code/05_night_resilience.py
+python3 code/06_stochastic_policy.py
 ```
 
 The sweep resolves the game directory from `LUNARFARM_DIR`, defaulting to a sibling

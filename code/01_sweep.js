@@ -32,10 +32,31 @@ const mean = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
 
    One policy, used by every experiment, so arms differ only in the factor under
    test. It tends, harvests, replants from a rotation and restocks — deliberately
-   competent and deliberately not clever. */
+   competent and deliberately not clever.
+
+   With cfg.stochastic the policy stops being deterministic in two ways that
+   matter. The event deck is answered rather than suppressed, so a run meets the
+   flares, infections and broker offers a player would; and the manager's own
+   thresholds are jittered per run, with a chance of skipping a day's tending
+   entirely. Without this the seeds test reproducibility, because the deck was
+   the model's only stochastic element.
+
+   Answering the deck uniformly at random is not a player and does not model
+   one: it never patches a hull, so pressure walks down to the abort limit, and
+   it takes the broker's offer to sell the larder down to a twelve-day reserve.
+   Every run of a first attempt died that way, most inside a month. The manager
+   here takes the remedial choice — conventionally the first offered — with
+   probability REMEDIAL and picks freely otherwise, which is a competent
+   operator having an occasional bad day rather than a coin toss with a farm. */
+const REMEDIAL = 0.75;
 function run(cfg) {
   seed(cfg.seed);
   const s = S.newGame();
+  /* drawn once per run, so each seed is a slightly different manager */
+  const jit = cfg.stochastic
+    ? { wet: 0.30 + Math.random() * 0.18, feed: 0.25 + Math.random() * 0.17,
+        skip: Math.random() * 0.10 }
+    : { wet: 0.4, feed: 0.35, skip: 0 };
   s.credits = cfg.credits === undefined ? 400000 : cfg.credits;
   s.science = 400;
   if (cfg.food) s.food = cfg.food;
@@ -70,20 +91,34 @@ function run(cfg) {
   for (let d = 0; d < (cfg.days || 300) && !s.over; d++) {
     for (let h = 0; h < 24; h++) {
       S.tick(s);
-      if (s.pendingEvent) s.pendingEvent = null;
+      if (s.pendingEvent) {
+        if (cfg.stochastic) {
+          const e = D.EVENTS.find(x => x.id === s.pendingEvent);
+          if (e) {
+            const pick = Math.random() < REMEDIAL
+              ? e.choices[0]
+              : e.choices[Math.floor(Math.random() * e.choices.length)];
+            S.resolveEvent(s, e.id, pick.effect);
+          } else s.pendingEvent = null;
+        } else s.pendingEvent = null;
+      }
       if (s.wantFields > 0) shed.push(1 - s.litFields / s.wantFields);
       if (s.over) break;
     }
     if (s.over) break;
-    for (const f of S.planted(s)) {
-      if (f.moisture < 0.4) S.water(s, f);
-      if (f.feed < 0.35) S.feed(s, f);
+    const tended = !(cfg.stochastic && Math.random() < jit.skip);
+    if (tended) for (const f of S.planted(s)) {
+      if (f.moisture < jit.wet) S.water(s, f);
+      if (f.feed < jit.feed) S.feed(s, f);
       if (f.growth >= 1) S.harvest(s, f);
     }
     s.fields.forEach(f => { if (!f.crop && !f.dead) { S.plant(s, f, mix[rot % mix.length]); rot++; } });
     if (s.water < 400 && s.credits > 2000) S.trade(s, 'water', 200);
     if (s.nutrients < 200 && s.credits > 2000) S.trade(s, 'nutrients', 200);
     if (cfg.buyCO2 && s.co2 < 45 && s.credits > 2000) S.trade(s, 'co2', 40);
+    /* a farm without a deep pantry buys rations when the store runs down, the
+       way the game's own auto-manage does */
+    if (cfg.restock && s.food < S.dailyNeed(s) * 12 && s.credits > 2000) S.trade(s, 'food', 30000);
 
     co2Floor = Math.min(co2Floor, s.co2);
     if (s.credits < 1500) { brokeRun++; brokeWorst = Math.max(brokeWorst, brokeRun); } else brokeRun = 0;
@@ -248,8 +283,28 @@ function runWithBatteries(cfg, batteries) {
   try { return run(cfg); } finally { S.newGame = orig; }
 }
 
+/* ---------- E5: the same economics question, with the deck live ---------- */
+function E5() {
+  console.log('E5 diversity economics under a stochastic policy');
+  const SEEDS12 = Array.from({ length: 12 }, (_, i) => (i + 1) * 60013);
+  const rows = [];
+  for (let breadth = 1; breadth <= 10; breadth++) {
+    for (const sd of SEEDS12) {
+      const mix = PLANTS.slice(0, breadth);
+      const r = run({ seed: sd, compartments: ['studio'], mix, days: 240,
+                      workedBeds: true, buyCO2: true, halls: 6, restock: true,
+                      stochastic: true });
+      rows.push({ breadth, seed: sd, media_total: r.media_total,
+                  service_total: r.service_total, credits_end: r.credits_end,
+                  kinds: r.kinds, harvests: r.harvests,
+                  survived: r.survived ? 1 : 0, end_day: r.end_day });
+    }
+  }
+  writeCSV('e5_diversity_stochastic.csv', rows);
+}
+
 const which = process.argv.slice(2);
-const ALL = { E1, E2, E3, E4 };
+const ALL = { E1, E2, E3, E4, E5 };
 const todo = which.length ? which : Object.keys(ALL);
 console.log('Lunar Farm BLSS sweep — driving', GAME);
 for (const k of todo) {
