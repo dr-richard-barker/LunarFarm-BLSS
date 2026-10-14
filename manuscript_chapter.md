@@ -13,26 +13,25 @@ player makes that choice under an explicit economy, and use it as an instrument 
 questions that only arise once a decision-maker is inside the loop. First, which compartment
 actually stabilises the carbon budget of a farm that exports food? Across eight seeded runs per
 arm with starvation timing and substrate quality controlled out, only an anaerobic digester
-raises the carbon floor — from a mean minimum of 5.1 kg to 79.4 kg, a factor of 15.6 — while a
+raises the carbon floor — from a mean minimum of 5.1 kg to 79.4 kg, a factor of 15.5 — while a
 mealworm tier, a nitrifying bioreactor and fungal crops in rotation raise the mean buffer without
 raising its minimum. Second, can an economy be shaped so that biodiversity pays for itself? A
 broadcast mechanic that prices subject novelty yields revenue that scales with rotation breadth
 (r = 0.989, p = 7.4 × 10⁻⁸; 2.94× from one crop to ten), while a life-support service contract
 that prices closure is statistically flat against breadth (r = −0.584, p = 0.076) — two separable
 incentives on the same farm. Third, how far can a farm lean on dark-grown heterotrophs to escape
-the fortnight of lunar night? Load shedding falls monotonically with dark-grown fraction, but
-every run above 40% ends on oxygen exhaustion rather than starvation, placing the optimum near
+the fortnight of lunar night? Load shedding falls as the dark-grown fraction rises to 40%, but every run above 40% ends on oxygen exhaustion rather than starvation, placing the optimum near
 20%. We also report a negative marginal interaction: adding a nitrifying bioreactor *reduces* the
 system's mean carbon buffer by 60.6 kg when a digester is present, because the two compartments
 compete for the same waste stream. Re-running all four experiments under a stochastic
 policy — the event deck answered rather than suppressed, and the manager's own thresholds
 jittered per run — reproduces every conclusion: the diversity ratio at 2.93× against 2.94×
-(r = 0.967, p = 5.5 × 10⁻⁷²), the digester's carbon floor at 15.1× against 15.6×
-(p = 7 × 10⁻²¹), the negative nitrifier interaction at −86.0 ± 8.7 kg (p = 6 × 10⁻⁸), and the
+(r = 0.967, p = 5.5 × 10⁻⁷²), the digester's carbon floor at 15.1× against 15.5×
+(p = 7 × 10⁻²¹), the negative nitrifier interaction at −86.0 ± 8.7 kg (mean ± s.e., p = 6 × 10⁻⁸), and the
 oxygen cliff at the same 40–60% boundary. Two findings change under noise: a mealworm tier's
 carbon effect is not distinguishable from zero (p = 0.73) where the deterministic run implied a
 small negative, and a fungal rotation's floor becomes both much higher and far more variable
-(31.3 ± 20.5 kg against 6.2). The variance decomposition shows the model's stochasticity mostly
+(31.3 ± 20.5 kg, mean ± s.d., against 6.2). The variance decomposition shows the model's stochasticity mostly
 determines *whether* a farm survives rather than how well it earns once it does. We argue that the methodological lesson generalises — our own first, uncontrolled
 comparison of these arms produced a confidently wrong answer, and our first attempt at adding
 noise killed every run — and that human-in-the-loop models are a useful complement to
@@ -66,8 +65,7 @@ budget with load shedding, and — unusually — a fully specified economy. Ever
 was taken by driving the shipped simulation code directly, not a reimplementation of it.
 
 The work was prompted by a mundane failure. Players reported running out of money before their
-first crop matured, which turned out to be structural: income arrived only at harvest, and the
-first harvest is 50 to 120 days away. Fixing that required adding income streams, and the choice
+first crop matured, which turned out to be structural: income arrived only at harvest. Fixing that required adding income streams, and the choice
 of *what to pay the farm for* turned out to determine what players grew. That is the observation
 this chapter is built on.
 
@@ -89,7 +87,7 @@ productive farm runs down over time. This is not an artefact — Dong et al. (20
 budget with the sign reversed.
 
 Twenty-nine crops are available, drawn from lines that have actually been flown or are
-long-standing bioregenerative candidates. Four are heterotrophic or microbial: oyster mushroom
+long-standing bioregenerative candidates. Besides spirulina, four are heterotrophic or microbial: oyster mushroom
 (*Pleurotus ostreatus*), baker's yeast, a nitrogen-fixing cyanobacterium and a rhizobial
 inoculant. The first two are dark-grown, so they are never shed when power is short, and both
 respire — consuming oxygen and returning carbon dioxide.
@@ -142,14 +140,14 @@ a rotation, restock — is shared by every arm, so arms differ only in the facto
 
 Two confounds were identified during pilot runs and controlled out of the carbon experiments:
 
-1. **Starvation timing.** With default stores, every arm failed on day 72 with zero harvests
-   because nothing matured before the pantry emptied. The carbon question was never reached.
+1. **Starvation timing.** With default stores, every arm failed on day 72 with zero harvests because nothing matured
+   before the pantry emptied (pilot runs; their output was not kept in this repository). The carbon question was never reached.
    Experiments E1 and E3 therefore begin with a deep pantry.
-2. **Substrate quality.** Fresh halls are raw regolith and grow at roughly two-thirds rate,
+2. **Substrate quality.** Fresh halls are raw regolith and grow at 62% of the worked-bed rate,
    delaying first harvest past the point of interest. E1 and E3 begin with worked beds.
 
 This matters beyond bookkeeping. Our first, uncontrolled comparison — plants-only against a
-rotation containing mushrooms, at default settings — showed the plants-only arm failing in 3 of 3
+rotation containing mushrooms, at default settings, in pilot runs whose output was not kept — showed the plants-only arm failing in 3 of 3
 runs and the mushroom arm surviving in 3 of 3. The apparent conclusion, that a respiring
 compartment rescues the carbon loop, was wrong: a *photosynthetic* control (spirulina in the same
 slots) also survived, and once starvation and substrate were controlled the mushroom rotation
@@ -159,7 +157,8 @@ harvest cadence, not respiration.
 Experiments: **E1** carbon stability, eight arms × eight seeds, 300 days. **E2** diversity
 economics, rotation breadth 1–10 × studio on/off × five seeds, 240 days. **E3** compartment
 knockout — each alone, all four, and all-but-one — five seeds, 260 days. **E4** night resilience,
-dark-grown fraction 0–100% × two battery configurations × five seeds, 200 days. **E5** the E2
+dark-grown fraction 0–100% × two battery configurations × five seeds, 200 days, recording each
+run's failure message and end state. **E5** the E2
 question again under a stochastic policy, rotation breadth 1–10 × twelve seeds, 240 days.
 **E6–E8** E1, E3 and E4 again under the same stochastic policy, twelve seeds each.
 
@@ -169,7 +168,7 @@ reintroduce exactly the starvation confound the deep pantry exists to remove.
 
 The stochastic policy in E5 answers the event deck instead of suppressing it and jitters the
 manager's watering and feeding thresholds per run, with a small chance of skipping a day's
-tending. A first attempt answered the deck uniformly at random and **every one of 120 runs died,
+tending. A first attempt (a pilot, output not kept) answered the deck uniformly at random and **every one of 120 runs died,
 most inside a month**: a coin toss never patches a hull, so pressure walks down to the abort
 limit, and it accepts the broker's offer to sell the larder down to a twelve-day reserve. Adding
 noise is not the same as modelling a worse operator. The reported policy therefore takes the
@@ -194,7 +193,7 @@ otherwise, which is a competent operator having an occasional bad day.
 
 The distinction between floor and mean is the result. Arms that raise the mean buffer without
 raising its minimum still spend part of each lunar cycle in carbon limitation; only the digester
-changes the worst case, lifting the floor 15.6-fold. A spirulina rotation is marginally *worse*
+changes the worst case, lifting the floor 15.5-fold. A spirulina rotation is marginally *worse*
 than no compartment at all, because a fast photoautotroph is a net carbon consumer.
 
 The characteristic sawtooth in the right-hand panel is the lunar cycle: during the sunlit
@@ -207,8 +206,8 @@ for want of power — it recovers.
 
 Broadcast revenue scales strongly and near-linearly with rotation breadth (r = 0.989,
 p = 7.4 × 10⁻⁸), rising 2.94× from a single-crop rotation to a ten-crop one. Service-contract
-revenue over the same sweep is statistically flat (r = −0.584, p = 0.076). The farm's terminal
-credit position rises with breadth only when the studio is present.
+revenue over the same sweep is statistically flat (r = −0.584, p = 0.076). The farm's terminal credit position rises with breadth with or without the studio, but more
+steeply with it (right panel).
 
 This is a designed result rather than a discovered one, but it demonstrates something useful:
 biodiversity can be made economically rational by pricing novelty, and this can be done without
@@ -241,13 +240,14 @@ analysis.
 
 ![Night resilience](results/figures/fig4_night_resilience.png)
 
-Load shedding falls monotonically with dark-grown fraction — from 51% at zero to 0% at 80% with
-battery support — because a dark-grown crop is never shed. Harvests, however, collapse, and every
+Load shedding falls with dark-grown fraction — with battery support, from 51% at zero to 13% at
+40% and 0% at 80% — because a dark-grown crop is never shed. The fall is not monotonic: at 60%
+shedding rises again (18%, and 29% without batteries), in runs that are already failing. Harvests, however, collapse, and every
 run at or above 60% dark-grown ends in failure between day 144 and day 187.
 
-The failure mode is not starvation. Runs were given a deep pantry; they end with more than 700
-days of food in store and the message *"Oxygen reserves hit zero"*, with the carbon dioxide buffer
-saturated at its cap and residue exhausted. A farm dominated by heterotrophs has no photoautotroph
+The failure mode is not starvation. Runs were given a deep pantry, and all 30 failed runs end
+with the message *"Oxygen reserves hit zero"* while holding 732–748 days of food, with the carbon
+dioxide buffer at its 260 kg cap and crop residue exhausted. A farm dominated by heterotrophs has no photoautotroph
 left to replace the oxygen that the crew and the fungi are jointly burning.
 
 The optimum sits near 20%: at that fraction the farm sheds 43% rather than 51% of its called-for
@@ -283,7 +283,7 @@ Re-running the carbon, knockout and night experiments with the deck live and twe
 leaves all three headline conclusions standing, and sharpens two of the secondary ones.
 
 **The carbon floor (E6 against E1).** The digester holds a floor of 80.3 ± 1.9 kg against
-5.3 ± 0.5 kg with no compartment — a factor of 15.1, against 15.6 deterministic
+5.3 ± 0.5 kg with no compartment (mean ± s.d.) — a factor of 15.1, against 15.5 deterministic
 (Welch t = 131.8, p = 7.0 × 10⁻²¹). Every other arm stays at the floor, as before.
 
 The exception is instructive. A **fungal rotation's floor rises to 31.3 ± 20.5 kg** under noise,
@@ -294,7 +294,7 @@ both the effect and the uncertainty. This is the same lesson as §3 in a milder 
 trajectory is not a measurement.
 
 **The negative interaction (E7 against E3).** The nitrifying bioreactor's marginal contribution
-is **−86.0 ± 8.7 kg** (p = 6.5 × 10⁻⁸), larger than the −60.6 kg the deterministic run showed and
+is **−86.0 ± 8.7 kg** (mean ± s.e., p = 6.5 × 10⁻⁸), larger than the −60.6 kg the deterministic run showed and
 now with an interval that excludes zero comfortably. The digester (+49.5 ± 8.2 kg,
 p = 5.8 × 10⁻⁵) and the reef (+24.6 ± 9.3 kg, p = 0.016) remain positive.
 
@@ -375,8 +375,9 @@ python3 code/07_robustness.py
 ```
 
 The sweep resolves the game directory from `LUNARFARM_DIR`, defaulting to a sibling
-`LunarSims/farm` checkout. Every figure and table in this chapter is regenerated by those five
-commands; none was edited by hand.
+`LunarSims/farm` checkout. Every figure and table in this chapter is regenerated by those seven
+commands; none was edited by hand. The committed data were generated against LunarSims commit
+`a04b81b`; re-running the sweep against it reproduces every data file byte for byte.
 
 ### References
 

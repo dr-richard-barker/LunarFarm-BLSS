@@ -31,18 +31,26 @@ ax1.legend(); ax1.grid(axis="y"); ax1.set_axisbelow(True)
 s = g[g.batteries == 3]
 ax2.plot(s["dark_frac"] * 100, s["harvests"], color=GOOD, marker="o", ms=4, lw=1.6)
 ax2.set_xlabel("share of the farm grown in the dark (%)")
-ax2.set_ylabel("harvests in 200 days", color=GOOD)
+ax2.set_ylabel("harvests in 200 days (3 extra battery banks)", color=GOOD)
 ax2.tick_params(axis="y", colors=GOOD)
 ax2.set_title("but they cannot make the oxygen", loc="left", color=INK)
+# The failure mode is read off the recorded end state, not described.
+failed = df[df.survived == 0]
+oxygen = failed.failure.str.startswith("Oxygen reserves hit zero").sum()
 dead = s[s.survived < 1]
 if len(dead):
     x0 = dead["dark_frac"].min() * 100
     ax2.axvspan(x0 - 2, 102, color=WARN, alpha=0.10)
     ax2.text(x0 + 2, s["harvests"].max() * 0.62,
-             "every run here ends on\noxygen, not on food:\nno photoautotroph left\nto replace what the crew\nand the fungi burn",
+             f"{oxygen} of {len(failed)} runs here end on\noxygen, with {failed.food_days_end.min():.0f}+ days\nof food still stored:\nno photoautotroph left\nto replace what the crew\nand the fungi burn",
              fontsize=7.4, color=WARN, va="top")
 ax2.grid(axis="y"); ax2.set_axisbelow(True)
 
 fig.tight_layout()
 save(fig, "fig4_night_resilience.png")
 print(g.round(3).to_string(index=False))
+print(f"\nfailed runs: {len(failed)}, all at dark fraction >= {failed.dark_frac.min():.0%}; "
+      f"failure messages: {failed.failure.value_counts().to_dict()}")
+print(f"at failure: food in store {failed.food_days_end.min():.0f}-{failed.food_days_end.max():.0f} days; "
+      f"CO2 {failed.co2_end.min():.1f}-{failed.co2_end.max():.1f} kg (cap 260 without a composter); "
+      f"residue {failed.residue_end.min():.2f}-{failed.residue_end.max():.2f}")

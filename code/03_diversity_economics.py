@@ -35,13 +35,13 @@ ax1.errorbar(on["breadth"], on["service"], yerr=on["service_sd"], color=GOOD,
 ax1.set_xlabel("crops in the rotation")
 ax1.set_ylabel("earned over 240 days (credits)")
 ax1.set_title("Two income streams, one of them diversity-priced", loc="left", color=INK)
-ax1.legend(loc="center left")
+ax1.legend(loc="upper left")
 ax1.grid(axis="y"); ax1.set_axisbelow(True)
 ax1.annotate(f"×{ratio:.2f} from one crop to ten\nr = {r_media:.3f}, p = {p_media:.1e}",
              xy=(on["breadth"].iloc[-1], on["media"].iloc[-1]),
              xytext=(5.2, on["media"].max() * 0.62), fontsize=7.6, color=ACCENT)
 ax1.annotate(f"flat: r = {r_serv:.2f}, p = {p_serv:.2f}",
-             xy=(6, on["service"].iloc[5]), xytext=(5.6, on["service"].iloc[5] * 0.45),
+             xy=(6, on["service"].iloc[5]), xytext=(5.6, on["service"].iloc[5] * 1.35),
              fontsize=7.6, color=GOOD)
 
 w = 0.38

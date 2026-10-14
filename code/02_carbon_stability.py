@@ -55,10 +55,12 @@ for arm in show:
 ax2.axhline(14, color=WARN, lw=0.9, ls="--")
 ax2.set_xlabel("day"); ax2.set_ylabel("CO$_2$ buffer (kg)")
 ax2.set_title("A farm exports its carbon inside the food", loc="left", color=INK)
-ax2.legend(loc="upper left")
+ax2.legend(loc="upper left", bbox_to_anchor=(1.01, 1.0), frameon=False)
 ax2.grid(axis="y"); ax2.set_axisbelow(True)
 
 fig.tight_layout()
 save(fig, "fig1_carbon_stability.png")
 
 print(g[["label", "co2_floor", "co2_mean", "harvests", "n"]].round(1).to_string(index=False))
+floor = g.set_index("arm")["co2_floor"]
+print(f"digester floor / no-compartment floor = {floor['digester'] / floor['none']:.2f}x")

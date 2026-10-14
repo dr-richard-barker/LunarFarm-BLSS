@@ -56,7 +56,7 @@ GENUS_ROLE = {
     "Pseudomonas": ("digester_or_nitrifying", "metabolically versatile genus; some species genuine plant-growth-promoters, others opportunists"),
     "Acidovorax": ("digester_or_nitrifying", "environmental/freshwater genus, denitrification-capable in some species"),
     "Curvibacter": ("digester_or_nitrifying", "environmental freshwater genus"),
-    "Cloacibacterium": ("digester_or_nitrifying", "genus first described from wastewater/anaerobic digester sludge"),
+    "Cloacibacterium": ("digester_or_nitrifying", "genus first described from raw sewage (doi:10.1099/ijs.0.64218-0); C. caeni from activated sludge (doi:10.1099/ijsem.0.001841)"),
     "Cupriavidus": ("digester_or_nitrifying", "metabolically versatile, some species used industrially for bioplastic/waste processing"),
     "Acinetobacter": ("uncertain", "environmental genus, some species opportunistic human pathogens"),
 }
@@ -69,7 +69,7 @@ def load_real_upsettr_taxa():
     alt = MICROBIOME_SEEDLINGS / "Plants_in_space_microbiome - upsettr.csv"
     target = path if path.exists() else alt
     if not target.exists():
-        return []
+        raise FileNotFoundError(f"UpSet input not found: {path} or {alt}")
     counts = Counter()
     with open(target, newline="", encoding="utf-8") as f:
         reader = csv.reader(f)
@@ -101,7 +101,7 @@ def main():
             "taxon": species,
             "level": "species",
             "source_repo": "Microbiome_of_seedlings_in_space",
-            "source_detail": "real MetaPhlAn taxonomic profiling, UpSet input across OSDR-37/120/522/OSD-217",
+            "source_detail": "MetaPhlAn-derived species presence (UpSet input) across OSD-37/120/522/217",
             "data_provenance": "real_sequencing",
             "n_study_conditions_detected": n,
             "candidate_compartment": role,
@@ -113,6 +113,8 @@ def main():
     # data/processed/GUILD_METHOD.md: "Scores here are illustrative until
     # primary feature tables are ingested."
     guild_csv = OSDR_PLANT_MICROBIOME / "data" / "processed" / "guild_scores.csv"
+    if not guild_csv.exists():
+        raise FileNotFoundError(f"guild scores not found: {guild_csv}")
     if guild_csv.exists():
         with open(guild_csv, newline="", encoding="utf-8") as f:
             for row in csv.DictReader(f):

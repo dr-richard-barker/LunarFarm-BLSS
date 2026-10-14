@@ -50,6 +50,7 @@ ax2.set_xticks(x); ax2.set_xticklabels(k["compartment"], fontsize=8)
 ax2.set_ylabel("extra earned from the station over 260 days (credits)")
 ax2.set_title("Income: a different compartment does that", loc="left", color=INK)
 ax2.grid(axis="y"); ax2.set_axisbelow(True)
+ax2.set_ylim(0, k["service_alone"].max() * 1.18)  # room for the labels above the bars
 for i, v in enumerate(k["waste_alone"]):
     if v > 0:
         ax2.text(i, k["service_alone"].iloc[i] + 400, f"{v:.0f} waste\nprocessed",

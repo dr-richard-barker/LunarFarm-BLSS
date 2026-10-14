@@ -34,7 +34,7 @@ gd = d1.groupby("arm")["co2_floor"].mean().reindex(ORDER)
 x = np.arange(len(ORDER)); w = 0.38
 axA.bar(x - w/2, gd.values, w, color=SOFT, label="deterministic (E1)")
 axA.bar(x + w/2, gs["mean"].values, w, color=ACCENT, yerr=gs["std"].values,
-        error_kw=dict(ecolor="#7a8fa4", lw=0.9, capsize=2.5), label="stochastic (E6, 12 seeds)")
+        error_kw=dict(ecolor="#7a8fa4", lw=0.9, capsize=2.5), label="stochastic (E6, 12 seeds, ±1 s.d.)")
 axA.axhline(14, color=WARN, lw=0.9, ls="--")
 axA.set_xticks(x); axA.set_xticklabels([LABEL[a] for a in ORDER], rotation=32, ha="right", fontsize=7.6)
 axA.set_ylabel("lowest CO$_2$ buffer reached (kg)")
@@ -62,7 +62,7 @@ axB.barh(y, marg, 0.6, color=cols, xerr=err,
          error_kw=dict(ecolor="#7a8fa4", lw=0.9, capsize=2.5))
 axB.axvline(0, color=SOFT, lw=0.8)
 axB.set_yticks(y); axB.set_yticklabels([NICE[c] for c in COMP], fontsize=8.5)
-axB.set_xlabel("marginal change in mean CO$_2$ buffer, given the other three (kg)")
+axB.set_xlabel("marginal change in mean CO$_2$ buffer, given the other three (kg, ±1 s.e.)")
 axB.set_title("B — the negative interaction is real", loc="left", color=INK)
 axB.grid(axis="x"); axB.set_axisbelow(True)
 for i, (m, pp) in enumerate(zip(marg, ps)):

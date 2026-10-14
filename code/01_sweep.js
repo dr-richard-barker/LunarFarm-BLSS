@@ -264,9 +264,13 @@ function E4() {
           cfg.batteries = batteries;
           return runWithBatteries(cfg, batteries);
         })();
+        /* the end state is recorded so the failure mode is measured, not described */
+        const last = r.series[r.series.length - 1] || {};
         rows.push({ dark_frac: darkFrac, batteries, seed: sd, shed_mean: r.shed_mean,
                     harvests: r.harvests, survived: r.survived ? 1 : 0,
-                    co2_mean: r.co2_mean, end_day: r.end_day });
+                    co2_mean: r.co2_mean, end_day: r.end_day, failure: r.failure,
+                    food_days_end: last.food_days, co2_end: last.co2,
+                    residue_end: last.residue });
       }
     }
   }

@@ -10,7 +10,7 @@ Salter SJ, Cox MJ, Turek EM, et al. "Reagent and laboratory contamination can
 critically impact sequence-based microbiome analyses." *BMC Biology*.
 2014;12:87. [doi:10.1186/s12915-014-0087-z](https://doi.org/10.1186/s12915-014-0087-z)
 
-90 genera identified as recurrent contaminants of DNA extraction kits and PCR
+92 genera identified as recurrent contaminants of DNA extraction kits and PCR
 reagents in negative controls sequenced alongside real low-biomass samples —
 the standard reference for this kind of filter. Full list in
 [`ref_salter2014_kitome_genera.csv`](ref_salter2014_kitome_genera.csv),
@@ -29,31 +29,32 @@ screen, not a proof.
 
 ## 2. NASA spacecraft-assembly-cleanroom genera
 
-Bashir M, Ahmed M, Weinmaier T, Ciobanu D, Ivanova N, Pieber TR, Vaishampayan P.
+Bashir M, Ahmed M, Weinmaier T, Ciobanu D, Ivanova N, Pieber TR, Vaishampayan PA.
 "Functional Metagenomics of Spacecraft Assembly Cleanrooms: Presence of
 Virulence Factors Associated with Human Pathogens." *Frontiers in
 Microbiology*. 2016;7:1321.
 [doi:10.3389/fmicb.2016.01321](https://doi.org/10.3389/fmicb.2016.01321)
 
-Reports *Acinetobacter* (specifically *A. baumannii*, *A. lwoffii*) as the
-dominant genus (94-100% of the dominant family, Moraxellaceae) across real
-NASA spacecraft assembly cleanroom samples, alongside *Escherichia coli* and
-*Legionella pneumophila* present in all samples. Used narrowly here — only
+Reports that samples collected during spacecraft assembly were dominated by
+*Acinetobacter*, and that four potential pathogens — *A. baumannii*, *A. lwoffii*,
+*Escherichia coli* and *Legionella pneumophila* — were present in all cleanroom
+samples. Used narrowly here — only
 these three genera are flagged as "NASA cleanroom match," not a full list,
 because that's what this specific paper's headline finding actually
 supports.
 
-## 3. Human oral microbiome core genera
+## 3. Human oral genera
 
 Dewhirst FE, Chen T, Izard J, et al. "The Human Oral Microbiome." *Journal of
 Bacteriology*. 2010;192(19):5002-5017.
 [doi:10.1128/JB.00542-10](https://doi.org/10.1128/JB.00542-10) — the source
 behind the Human Oral Microbiome Database (HOMD).
 
-*Streptococcus*, *Veillonella*, *Neisseria*, *Actinomyces*, *Rothia* and
-*Granulicatella* are reported as core/abundant oral genera; *Porphyromonas*
-is a well-established oral genus independent of this specific source (one of
-the classic periodontal "red complex" taxa). Flagged separately from the
+*Streptococcus*, *Veillonella*, *Neisseria*, *Actinomyces*, *Rothia*, *Granulicatella*
+and *Porphyromonas* are flagged as human oral genera, citing this paper. An earlier
+version of this note called the first six "core/abundant" oral genera, which is not
+established here. **TODO:** confirm each genus against the paper or HOMD (the full text
+could not be read automatically on 2026-10-14). Flagged separately from the
 kitome list because it implies a different contamination *mechanism* —
 human breath/saliva/skin during sample handling, not extraction-kit reagent
 background — which matters for anyone trying to fix the actual lab protocol

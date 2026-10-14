@@ -103,14 +103,14 @@ footer a{color:var(--ink-soft)}
   <span class="num">01 — Findings</span>
   <h2>Four results</h2>
   <div class="cards">
-    <div class="card"><b>15.6×</b><span>the factor by which an anaerobic digester lifts the
+    <div class="card"><b>15.5×</b><span>the factor by which an anaerobic digester lifts the
       minimum carbon buffer — the only compartment that moves the floor rather than the mean</span></div>
     <div class="card"><b>2.94×</b><span>broadcast revenue from a ten-crop rotation against a
       monoculture, while closure income stays flat (r = 0.989, p = 7.4 × 10⁻⁸)</span></div>
     <div class="card"><b>−60.6 kg</b><span>the carbon a nitrifying bioreactor <em>costs</em> the
       system when a digester is present: they compete for the same waste</span></div>
-    <div class="card"><b>~20%</b><span>the optimum share of the farm grown in the dark. Above
-      60%, every run ends on oxygen — not on food</span></div>
+    <div class="card"><b>~20%</b><span>the optimum share of the farm grown in the dark. At or
+      above 60%, every run ends on oxygen — not on food</span></div>
     <div class="card"><b>2.93×</b><span>the same diversity result re-run with the event deck live
       and the manager jittered — against 2.94× deterministic</span></div>
     <div class="card"><b>4 of 4</b><span>headline conclusions that survive being re-run with a
@@ -144,7 +144,7 @@ footer a{color:var(--ink-soft)}
 
   <div class="note">
     <span class="h">The comparison that was wrong first</span>
-    <p>Our first, uncontrolled run showed a plants-only farm failing 3 of 3 and a mushroom
+    <p>Our first, uncontrolled pilot run (its output was not kept in this repository) showed a plants-only farm failing 3 of 3 and a mushroom
       rotation surviving 3 of 3 — apparent proof that a respiring compartment rescues the carbon
       loop. It was not. A <em>photosynthetic</em> control survived too, and once starvation timing
       and raw-regolith growth were controlled, the mushroom rotation raised the mean buffer and
@@ -192,7 +192,7 @@ footer a{color:var(--ink-soft)}
   <figure>
     <img src="figures/fig4_night_resilience.png" alt="Left: load shedding falling from about 51 percent to zero as the dark-grown fraction rises. Right: harvests collapsing from 21 to 1 over the same range, with a shaded region above 60 percent where every run fails.">
     <figcaption>Above 40% dark-grown the trade turns, and every run at or above 60% ends between
-      day 144 and day 187 — on oxygen exhaustion, with a saturated carbon buffer and more than
+      day 144 and day 187 — on oxygen exhaustion, with the carbon buffer at its cap and more than
       700 days of food still in store. The optimum sits near 20%.</figcaption>
   </figure>
 </section>
@@ -215,15 +215,15 @@ footer a{color:var(--ink-soft)}
     <img src="figures/fig6_robustness.png" alt="Three panels. A: grouped bars of the lowest CO2 buffer per arm, deterministic against stochastic, with the digester at about 80 kg in both. B: horizontal bars of marginal carbon contribution given the other three compartments, with the nitrifier strongly negative at minus 86 kg, digester and reef positive, and the mealworm not significant. C: survival against dark-grown fraction, deterministic and stochastic curves both falling to zero between 40 and 60 percent.">
     <figcaption>All four experiments re-run with twelve noisy operators. The digester's carbon
       floor holds at 15.1× (p = 7 × 10⁻²¹), the negative nitrifier interaction grows to
-      −86.0 ± 8.7 kg (p = 6 × 10⁻⁸), and the oxygen cliff sits at the same boundary. Two secondary
+      −86.0 ± 8.7 kg (mean ± s.e., p = 6 × 10⁻⁸), and the oxygen cliff sits at the same boundary. Two secondary
       readings change: a mealworm tier has <em>no detectable</em> carbon effect (p = 0.73), and a
       fungal rotation's floor is far higher and far more variable than one trajectory suggested
-      (31.3 ± 20.5 kg against 6.2). The deterministic arms were not wrong so much as
+      (31.3 ± 20.5 kg, mean ± s.d., against 6.2). The deterministic arms were not wrong so much as
       unquantified.</figcaption>
   </figure>
   <div class="note">
     <span class="h">The first attempt killed every run</span>
-    <p>Answering the deck uniformly at random ended all 120 runs, most inside a month: a coin toss
+    <p>In a pilot whose output was not kept, answering the deck uniformly at random ended all 120 runs, most inside a month: a coin toss
       never patches a hull, so pressure walks down to the abort limit, and it accepts the broker's
       offer to sell the larder down to a twelve-day reserve. That would have supported the
       conclusion that the economy is fragile. It was the policy that was fragile.</p>
@@ -264,8 +264,9 @@ footer a{color:var(--ink-soft)}
   <span class="num">08 — Reproducing</span>
   <h2>Every figure regenerates</h2>
   <p>The sweep loads the game's own <code>data.js</code> and <code>sim.js</code> and seeds
-    <code>Math.random</code>, so the analysis measures the code that ships and cannot drift
-    from it.</p>
+    <code>Math.random</code>, so the analysis measures the code that ships. The data were generated against
+    LunarSims commit <code>a04b81b</code>; re-running the sweep against it reproduces every data
+    file byte for byte.</p>
 <pre>node code/01_sweep.js
 python3 code/02_carbon_stability.py
 python3 code/03_diversity_economics.py

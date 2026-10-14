@@ -15,16 +15,17 @@ Read the write-up: **[`manuscript_chapter.md`](manuscript_chapter.md)**.
 [`consortium/`](consortium/) asks a different question than the four findings below: not what
 the *game* shows, but what a *real* minimal plant+fungal+microbial consortium would need to be to
 back a closed loop like this one. Milestone 1 is done — real taxon inventory, a GEM sanity check,
-and a contamination filter against 3 cited reference lists. Result so far: the strongest apparent
-taxonomic signal in the real data is mostly reagent/handling contamination, not plant
-colonization — see [`consortium/FINDINGS.md`](consortium/FINDINGS.md). No consortium composition
-claim yet.
+and a genus-level contamination screen against genus sets from three cited papers. Result so far:
+most of the strongest apparent taxonomic signal in the real data matches known reagent/handling
+contaminant genera. A genus-level screen cannot tell contamination from colonization, so this is a
+flag, not a verdict — see [`consortium/FINDINGS.md`](consortium/FINDINGS.md). No consortium
+composition claim yet.
 
 ## The four findings
 
 1. **Only an anaerobic digester lifts the carbon floor.** Across eight seeded runs per arm, with
    starvation timing and substrate quality controlled out, the digester raises the minimum CO₂
-   buffer from 5.1 kg to 79.4 kg — a factor of 15.6. A mealworm tier, a nitrifying bioreactor and
+   buffer from 5.1 kg to 79.4 kg — a factor of 15.5. A mealworm tier, a nitrifying bioreactor and
    fungal crops in rotation raise the *mean* buffer while leaving the *minimum* untouched, so they
    still spend part of every lunar cycle in carbon limitation.
 2. **Biodiversity can be made to pay, separably.** A broadcast mechanic that prices subject
@@ -35,9 +36,9 @@ claim yet.
    nitrifying bioreactor *reduces* the system's mean carbon buffer by 60.6 kg when a digester is
    present, because both draw on the same waste stream — while earning more than twice as much.
    A player optimising income alone degrades the loop they are paid to close.
-4. **There is an optimum dark-grown fraction, near 20%.** Load shedding falls monotonically as
-   more of the farm is grown in the dark, but every run at or above 60% fails — on **oxygen**, not
-   food, with a saturated carbon buffer and 700+ days of stores untouched. Heterotrophs are a
+4. **There is an optimum dark-grown fraction, near 20%.** Load shedding falls from 51% to 13% as the dark-grown
+   share rises to 40% (with battery support), but every run at or above 60% fails — all 30 on
+   **oxygen**, not food, with the carbon buffer at its cap and 732+ days of food still in store. Heterotrophs are a
    supplement, never a substitute.
 5. **Every conclusion survives a worse operator — and two secondary ones change.** Re-run with the event deck live and the
    manager's thresholds jittered per run, the ratio is **2.93×** against 2.94× deterministic
@@ -47,24 +48,25 @@ claim yet.
    noise decides whether a farm survives, not how well it trades once it does.
 
    All four experiments were re-run this way. The digester's carbon floor holds at 15.1× against
-   15.6× (p = 7 × 10⁻²¹); the negative nitrifier interaction gets *larger* at −86.0 ± 8.7 kg
-   (p = 6 × 10⁻⁸); the oxygen cliff sits at the same 40–60% boundary, with 75% of failures above
+   15.5× (p = 7 × 10⁻²¹); the negative nitrifier interaction gets *larger* at −86.0 ± 8.7 kg
+   (mean ± s.e., p = 6 × 10⁻⁸); the oxygen cliff sits at the same 40–60% boundary, with 75% of failures above
    it being oxygen exhaustion. Two secondary readings change once there is a spread attached:
-   a **mealworm tier has no detectable carbon effect at all** (−4.2 ± 11.7 kg, p = 0.73, where the
+   a **mealworm tier has no detectable carbon effect at all** (−4.2 ± 11.7 kg, mean ± s.e., p = 0.73, where the
    deterministic run implied a small negative), and a **fungal rotation's carbon floor is both far
-   higher and far more variable** than one trajectory suggested (31.3 ± 20.5 kg against 6.2). The
+   higher and far more variable** than one trajectory suggested (31.3 ± 20.5 kg, mean ± s.d., against 6.2). The
    deterministic arms were not wrong so much as unquantified.
 
 ## Two notes on method
 
-**The controls mattered.** Our first, uncontrolled comparison gave a confidently wrong answer. A plants-only farm failed in
+**The controls mattered.** Our first, uncontrolled comparison — pilot runs whose output was not kept in
+this repository — gave a confidently wrong answer. A plants-only farm failed in
 3 of 3 runs while a mushroom rotation survived in 3 of 3, which looked like proof that a respiring
 compartment rescues the carbon loop. It was not: a photosynthetic control survived too, and once
 starvation timing and raw-regolith growth were controlled, the mushroom rotation turned out to
 raise the mean buffer and not its floor. The effect was harvest cadence, not respiration.
 
-**So did the shape of the noise.** Our first stochastic policy answered the event deck uniformly
-at random, and every one of 120 runs died — most inside a month. A coin toss never patches a hull,
+**So did the shape of the noise.** Our first stochastic policy (again a pilot, output not kept) answered the event
+deck uniformly at random, and every one of 120 runs died — most inside a month. A coin toss never patches a hull,
 so pressure walks to the abort limit, and it takes the broker's offer to sell the larder down to a
 twelve-day reserve. That would have supported the conclusion that the economy is fragile; it was
 the policy that was fragile. Adding noise is not the same as modelling a worse operator.
@@ -107,7 +109,9 @@ python3 code/07_robustness.py
 
 `01_sweep.js` resolves the game with `LUNARFARM_DIR`, defaulting to `../LunarSims/farm`. It loads
 `data.js` and `sim.js` directly and seeds `Math.random`, so **the analysis measures the code that
-ships** and cannot drift from it.
+ships**. The committed data were generated against LunarSims commit `a04b81b`, the last change to
+`farm/js/data.js` and `sim.js`; re-running the sweep against it reproduces every file in `data/`
+byte for byte. A later change to the game would need the sweep re-run.
 
 ## Parameter provenance
 

@@ -5,27 +5,32 @@ illustrative-model source, and one real genome-scale metabolic model (GEM), plus
 sanity check on that GEM. Reproducible via `code/01_build_taxon_inventory.py` and
 `code/02_gem_sanity_check.py`.
 
-## 1. The real taxonomic signal across 8 OSDR studies matches known contamination reference lists more often than not — now checked, not guessed
+## 1. The real taxonomic signal across 4 OSDR studies matches known contamination reference lists more often than not — now checked, not guessed
 
-`Microbiome_of_seedlings_in_space`'s UpSet input is real MetaPhlAn output — actual
-sequencing reads processed against real reads, not illustrative data — spanning
-19 study/genotype/condition columns across OSDR-37, OSDR-120, OSDR-522 and OSD-217
-(Arabidopsis ecotypes Col-0/Cvi-0/WS-2/Ler-0/PhyD, flight vs. ground, light vs. dark).
+`Microbiome_of_seedlings_in_space`'s UpSet input is a species-presence table that
+repository describes as MetaPhlAn output from real sequencing reads — not illustrative
+data — spanning 19 study/genotype/condition columns across OSD-37, OSD-120, OSD-522 and
+OSD-217 (*Arabidopsis* lines Col-0, Cvi-0, WS-2 and Ler-0, and the phyD T-DNA mutant
+SALK_027956C; flight vs. ground, light vs. dark). All four are RNA-seq transcriptome
+studies, so these taxa come from non-plant reads in plant libraries. The MetaPhlAn runs
+that produced the table are not in that repository, so per-sample abundances cannot be
+re-derived here. The repository also holds a second, 23-column version of the table
+(`Zerrin_July/`, adding OSD-38); this module reads the root copy.
 
 `code/03_contamination_filter.py` checks each of the 51 real detected species
-against three actual cited reference lists (full sources and caveats in
+against genus sets from three cited papers (full sources and caveats in
 [`data/CONTAMINATION_SOURCES.md`](data/CONTAMINATION_SOURCES.md)) instead of the
 genus-level literature guesses this finding originally relied on:
 
 1. **Salter et al. 2014** (*BMC Biology*, doi:10.1186/s12915-014-0087-z) — the
-   standard 90-genus reagent/DNA-extraction-kit contamination reference (the
+   standard 92-genus reagent/DNA-extraction-kit contamination reference (the
    "kitome").
 2. **Bashir et al. 2016** (*Frontiers in Microbiology*, doi:10.3389/fmicb.2016.01321)
    — real NASA spacecraft-assembly-cleanroom metagenomics; used narrowly for the
    3 genera (*Acinetobacter*, *Escherichia*, *Legionella*) that paper's own
    headline finding actually supports.
 3. **Dewhirst et al. 2010** (*J Bacteriol*, doi:10.1128/JB.00542-10 / HOMD) —
-   core human oral microbiome genera, flagged separately because it implies a
+   human oral genera, flagged separately because it implies a
    different contamination mechanism (handling/breath, not reagent background).
 
 **Result: 29 of 51 real detected species (57%) match at least one reference
@@ -34,29 +39,32 @@ columns, i.e. the strongest apparent signal), **8 are flagged**: *Cutibacterium
 acnes* (15/19 columns, kitome), *Herbaspirillum huttiense* (9/19, kitome),
 *Ralstonia pickettii* (8/19, kitome), *Pseudomonas chengduensis* and
 *P. fluorescens* (8/19 each, kitome), *Curvibacter gracilis* (8/19, kitome),
-*Escherichia coli* (7/19, kitome **and** independently the dominant real
-NASA-cleanroom genus per Bashir et al.), *Acidovorax temperans* (7/19, kitome).
-The strongest apparent signal in the dataset is, on the current evidence, more
-consistent with reagent/handling contamination than with real plant
-colonization — a real and useful negative result, not a data-quality failure
-to route around.
+*Escherichia coli* (7/19, kitome, and one of the four potential pathogens Bashir et al.
+found in every cleanroom sample), *Acidovorax temperans* (7/19, kitome).
+Most of the strongest apparent signal in the dataset therefore matches known
+reagent/handling contaminant genera. A genus-level screen cannot tell contamination from
+colonization — many of these genera are also common soil, water and plant-associated
+bacteria — so this is a flag that the signal needs a negative control, not a verdict that
+it is contamination.
 
 Full per-taxon flags: [`data/taxon_inventory_filtered.csv`](data/taxon_inventory_filtered.csv).
 
 ## 2. Two named species survive the filter — one thematically apt, one a real crop-risk pathogen, neither yet a validated consortium member
 
-Only 22 of 51 real species carry no reference-list flag, and 20 of those are
+Only 22 of 51 real species carry no reference-list flag, and 19 of those are
 singleton detections (1/19 columns) with too little recurrence to weigh
-either way. The two exceptions:
+either way. Three recur: two named species, and *GGB2722 SGB3663* (5/19 columns),
+an unnamed MetaPhlAn genome bin that a genus-level screen cannot check at all. The
+two named species:
 
 - ***Cloacibacterium caeni*** (8/19 columns, unflagged) — a genus first
-  described from wastewater/anaerobic-digester sludge. It's the single
-  strongest surviving real signal in the whole inventory, and it happens to
-  map thematically onto the game's digester compartment. That's suggestive,
+  described from raw sewage (doi:10.1099/ijs.0.64218-0); *C. caeni* itself was isolated
+  from activated sludge (doi:10.1099/ijsem.0.001841). It's the strongest surviving named
+  signal in the whole inventory, and it happens to map thematically onto the game's
+  waste-processing compartments. That's suggestive,
   not confirmed — a name matching a compartment is not the same as a
   metabolic-capability match, and this is genus-level, not strain-level.
-- ***Agrobacterium tumefaciens*** (7/19 columns, unflagged by these three
-  lists) — a real phytopathogen (crown gall disease); this belongs on a
+- ***Agrobacterium tumefaciens*** (7/19 columns, unflagged by these three sources) — a real phytopathogen (crown gall disease); this belongs on a
   "must exclude or monitor" list, not a candidate-member list, despite
   passing the contamination filter.
 
@@ -65,8 +73,8 @@ either way. The two exceptions:
 respectively in the previous version of this finding — are **both also on
 the Salter kitome list**, which is itself informative: real
 environmental/plant-associated organisms and reagent contaminants overlap
-heavily by genus, because extraction kits are manufactured using
-environmental water sources. A genus's real biological capability (e.g.
+heavily by genus: Salter et al. note that many contaminant genera are normally found
+in soil and water. A genus's real biological capability (e.g.
 nitrogen fixation) does not clear it of a contamination flag; the two
 questions are independent, and both matter before treating a detection as
 a candidate consortium member.
@@ -117,9 +125,9 @@ FBA on all four files, corrected reading:
 | BOM_ss5_medium | 5,243 | no (by design — pipeline input, not a deliverable) | none (`0`) | not applicable |
 
 The growth flux of 125.0 for both references is not a new result — it
-independently reproduces `Myco_tissue_RNAseq/NOTES.md` §14c's own reported
-number exactly, which is a genuine (if small) cross-validation rather than a
-new finding. `Myco_tissue_RNAseq`'s README and a new `models/README.md` have
+reproduces `Myco_tissue_RNAseq/NOTES.md` §14c's reported number exactly. That is a re-run
+of the same model files, not an independent check, and the value depends on the medium's
+uptake bounds — hence "uncalibrated". `Myco_tissue_RNAseq`'s README and a new `models/README.md` have
 since been updated upstream to make this explicit, so the next reader
 doesn't repeat this mistake.
 
@@ -128,16 +136,16 @@ doesn't repeat this mistake.
 Both milestone-1 prerequisites are now resolved:
 
 1. ~~Narrow the real taxon list with an actual contamination filter~~ —
-   done: 29 of 51 real species (57%) flagged against three cited reference
-   lists (finding 1); only *Cloacibacterium caeni* and *Agrobacterium
-   tumefaciens* survive with any real recurrence, and the latter is a
-   pathogen risk, not a candidate.
+   done: 29 of 51 real species (57%) flagged against genus sets from three cited papers (finding 1); among unflagged
+   taxa only *Cloacibacterium caeni*, *Agrobacterium tumefaciens* and the unnamed bin
+   *GGB2722 SGB3663* recur, and *A. tumefaciens* is a pathogen risk, not a candidate.
 2. ~~Fix the `_medium` GEM variants in `Myco_tissue_RNAseq`~~ — resolved:
    there was nothing to fix; use `*_gapfilled.xml` directly (finding 4).
 
 But resolving the prerequisites surfaced a harder problem than either one
 individually: **there is currently one (1) real, non-pathogen, non-flagged
-bacterial candidate with meaningful recurrence** (*C. caeni*), and **one**
+bacterial candidate with meaningful recurrence** (*C. caeni*; the recurring
+*GGB2722 SGB3663* bin has no species identity to evaluate), and **one**
 real fungal partner with a working GEM (*P. ostreatus*, from a physical
 mycoponic culture system, not a spaceflight sample at all). That is not
 enough real, trustworthy taxa to run a meaningful flux-balance co-culture
